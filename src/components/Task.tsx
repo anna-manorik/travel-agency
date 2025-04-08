@@ -18,4 +18,4 @@ const Task = ({ title, description, isCompleted, toggleComplete}: Props) => {
     )
 }
 
-export default Task;
+export default Task; 
