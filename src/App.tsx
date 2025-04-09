@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import './App.css'
-import Task from './components/Task'
+import TaskList from './components/TaskList'
+import AddingForm from './components/AddingForm'
+import { TaskProps } from './types/TaskProps';
 
 function App() {
-  const [isCompleted, toggleComplete] = useState(false)
-  const state = {
-    title: 'first task',
-    description: 'this is the first task of my app'
-  }
+  const [taskList, setTaskList] = useState<TaskProps[]>([])
 
+  const addTask = (title: string, description: string) => {
+    const newTask = {
+      title,
+      description,
+    }
+
+    setTaskList([...taskList, newTask])
+  }
 
   return (
     <>
       <h1>My App</h1>
-      <Task title={state.title} description={state.description} isCompleted={isCompleted} toggleComplete={toggleComplete} />
+      <AddingForm addTask={addTask}></AddingForm>
+      <TaskList taskList={taskList}></TaskList>
     </>
   )
 }
