@@ -1,7 +1,7 @@
 import { TaskPropsAdditional } from '../types/TaskProps'
 import { useState } from 'react';
 
-const Task = ({ id, title, description, deleteTaskFunk }: TaskPropsAdditional) => {
+const Task = ({ id, title, description, editTaskFunk, deleteTaskFunk }: TaskPropsAdditional) => {
     const [isCompleted, setIsCompleted] = useState(false);
 
     const toggleComplete = () => {
@@ -11,8 +11,8 @@ const Task = ({ id, title, description, deleteTaskFunk }: TaskPropsAdditional) =
     return (
         <>
             <div className='task-item'>
-                <span><b>Title:</b> {title}</span><br></br>
-                <span><b>Description:</b> {description}</span><br></br>
+                <b>Title:</b><span> <span id='title' onClick={() => editTaskFunk(id, 'title')}>{title}</span></span><br></br>
+                <b>Description:</b><span> <span id='description' onClick={() => editTaskFunk(id, 'description')}>{description}</span></span><br></br>
                 <span><b>Is Task completed?</b> {isCompleted ? '✅' : '❌'}</span>
                 <button onClick={toggleComplete}>
                     {isCompleted ? 'Reopen' : 'Done'}
