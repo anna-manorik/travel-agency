@@ -2,7 +2,7 @@ export type TaskProps = {
     id: string,
     title: string;
     description: string;
-    // deleteTaskFunk: (id: string) => void;
+    category: string,
 };
 
 export type TaskPropsAdditional = TaskProps & {
