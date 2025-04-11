@@ -1,30 +1,23 @@
-import { useState } from "react"
+import React, { useState } from "react"
 
 type SearchProps = {
-    searchTasksFunk: (category: string) => void
+    searchFunk: (searchValue: string) => void
 }
 
-const SearchForm = ({ searchTasksFunk }: SearchProps) => {
-    const [choosedCategory, setCategory] = useState('')
+const SearchForm = ({ searchFunk }: SearchProps) => {
+    const [searchValue, setSearchValue] = useState('')
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedValue = e.target.value;
-        setCategory(selectedValue);
-        searchTasksFunk(selectedValue); // одразу передаємо вибране значення
-      };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchValue = e.target.value
+        setSearchValue(searchValue)
+        searchFunk(searchValue)
+    }
 
     return (
         <>
-            <label>Search by Category</label>
-                <select value={choosedCategory} onChange={handleChange}>
-                    <option value="" disabled>Choose Category</option>
-                    <option>All</option>
-                    <option>Home</option>
-                    <option>Work</option>
-                    <option>Family</option>
-                    <option>Study</option>
-                </select>
-        </>
+            <label>Search by task title</label>
+            <input type="text" onChange={handleChange} value={searchValue}></input>
+        </> 
     )
 }
 

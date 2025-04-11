@@ -3,6 +3,7 @@ import './App.css'
 import TaskList from './components/TaskList'
 import AddingForm from './components/AddingForm'
 import { TaskProps } from './types/TaskProps';
+import FilterForm from './components/FilterForm'
 import SearchForm from './components/SearchForm'
 import { nanoid } from 'nanoid';
 
@@ -51,13 +52,14 @@ function App() {
     const newArray = taskList.map(task => task.id === id ? {...task, [fieldType]: newValue} : task)
 
     setTaskList(newArray)
+    setFilteredTaskList(newArray)
   }
 
   const deleteTask = (id: string) => {
     setTaskList(taskList.filter(task => task.id !== id))
   }
 
-  const searchTasks = (category: string) => {
+  const filterTasks = (category: string) => {
     if(category === 'All') {
       setFilteredTaskList(taskList)
       return
@@ -65,11 +67,22 @@ function App() {
     setFilteredTaskList(taskList.filter(task => task.category === category))
   }
 
+  const searchTasks = (searchValue: string) => {
+    if (!searchValue.trim()) {
+      console.log('!!!!!')
+      setFilteredTaskList(taskList)
+      return
+    }
+    const filtered = filteredTaskList.filter(task => task.title.includes(searchValue))
+    setFilteredTaskList(filtered)
+  }
+
   return (
     <>
       <h1>My App</h1>
       <AddingForm addTask={addTask}></AddingForm>
-      <SearchForm searchTasksFunk={searchTasks}></SearchForm>
+      <FilterForm filterTasksFunk={filterTasks}></FilterForm>
+      <SearchForm searchFunk={searchTasks}></SearchForm>
       <TaskList taskList={filteredTaskList.length > 0 ? filteredTaskList : taskList} editTaskFunk={editTask} deleteTaskFunk={deleteTask}></TaskList>
     </>
   )
