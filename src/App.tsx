@@ -10,6 +10,7 @@ import { nanoid } from 'nanoid';
 function App() {
   const [taskList, setTaskList] = useState<TaskProps[]>([])
   const [filteredTaskList, setFilteredTaskList] = useState<TaskProps[]>([])
+  const [notFound, setNotFound] = useState(false);
 
   const addTask = (title: string, description: string, category: string) => {
     const newTask = {
@@ -52,7 +53,7 @@ function App() {
     const newArray = taskList.map(task => task.id === id ? {...task, [fieldType]: newValue} : task)
 
     setTaskList(newArray)
-    setFilteredTaskList(newArray)
+    // setFilteredTaskList(newArray)
   }
 
   const deleteTask = (id: string) => {
@@ -69,12 +70,14 @@ function App() {
 
   const searchTasks = (searchValue: string) => {
     if (!searchValue.trim()) {
-      console.log('!!!!!')
       setFilteredTaskList(taskList)
+      setNotFound(false)
       return
     }
-    const filtered = filteredTaskList.filter(task => task.title.includes(searchValue))
+
+    const filtered = taskList.filter(task => task.title.includes(searchValue))
     setFilteredTaskList(filtered)
+    setNotFound(filtered.length === 0)
   }
 
   return (
@@ -83,8 +86,22 @@ function App() {
       <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>
       <SearchForm searchFunk={searchTasks}></SearchForm>
-      <TaskList taskList={filteredTaskList.length > 0 ? filteredTaskList : taskList} editTaskFunk={editTask} deleteTaskFunk={deleteTask}></TaskList>
-    </>
+      {filteredTaskList.length > 0 ? (
+        <TaskList
+          taskList={filteredTaskList}
+          editTaskFunk={editTask}
+          deleteTaskFunk={deleteTask}
+        />
+      ) : notFound ? (
+        <p>Нічого не знайдено 😢</p>
+      ) : (
+        <TaskList
+          taskList={taskList}
+          editTaskFunk={editTask}
+          deleteTaskFunk={deleteTask}
+        />
+      )}
+    </> 
   )
 }
 
