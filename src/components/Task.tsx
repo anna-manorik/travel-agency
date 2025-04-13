@@ -10,7 +10,7 @@ const Task = ({ id, title, description, category, editTaskFunk, deleteTaskFunk }
 
     return (
         <>
-            <div className='task-item'>
+            <div className='border-2 border-yellow-400 p-5'>
                 <b>Title:</b><span> <span id='title' onClick={() => editTaskFunk(id, 'title')}>{title}</span></span><br></br>
                 <b>Description:</b><span> <span id='description' onClick={() => editTaskFunk(id, 'description')}>{description}</span></span><br></br>
                 <b>Category:</b><select>
@@ -21,10 +21,10 @@ const Task = ({ id, title, description, category, editTaskFunk, deleteTaskFunk }
                     <option>Study</option>
                 </select><br></br>
                 <span><b>Is Task completed?</b> {isCompleted ? '✅' : '❌'}</span><br></br>
-                <button onClick={toggleComplete}>
+                <button onClick={toggleComplete} className="border-4 border-yellow-400 bg-yellow-300 font-bold mr-5 p-2">
                     {isCompleted ? 'Reopen' : 'Done'}
                 </button>
-                <button onClick={() => deleteTaskFunk(id)}>Delete</button>
+                <button onClick={() => deleteTaskFunk(id)} className="border-4 border-yellow-400 bg-yellow-300 font-bold p-2">Delete</button>
             </div>
         </>
     )

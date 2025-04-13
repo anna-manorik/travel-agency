@@ -14,10 +14,10 @@ const SearchForm = ({ searchFunk }: SearchProps) => {
     }
 
     return (
-        <>
-            <label>Search by task title</label>
-            <input type="text" onChange={handleChange} value={searchValue}></input>
-        </> 
+        <div className="flex">
+            <label className="font-bold">Search by task title</label>
+            <input type="text" onChange={handleChange} value={searchValue} className="block h-10 border-4 border-yellow-400 ml-5"></input>
+        </div> 
     )
 }
 

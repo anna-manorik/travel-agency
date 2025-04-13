@@ -1,35 +1,43 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 type AddingFormProp = {
     addTask: (title: string, description: string, category: string) => void
 }
 
-const AddingForm = ({ addTask }: AddingFormProp) => {
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [category, setCategory] = useState("")
+type FormValues = {
+    title: string;
+    description: string;
+    category: string
+};
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        addTask(title, description, category);
-        setTitle('')
-        setDescription('')
-        setCategory('')
-    }
+const AddingForm = ({ addTask }: AddingFormProp) => {
+    const initialValues: FormValues = {
+        title: '',
+        description: '',
+        category: 'Choose Category'
+    };
+
+    const handleSubmit = (values: FormValues, actions: any) => {
+        addTask(values.title, values.description, values.category);
+        actions.resetForm();
+    };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                    <option value="" disabled>Choose Category</option>
-                    <option>Home</option>
-                    <option>Work</option>
-                    <option>Family</option>
-                    <option>Study</option>
-                </select>
-            <button>ADD TASK</button>
-        </form>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Form className="flex flex-col mb-10 max-w-md mx-auto p-4 bg-white rounded shadow-md">
+                <Field as="input" name="title" type="text" placeholder="Title" className="h-10 border-4 border-yellow-400" />
+                <Field name="description" type="text" placeholder="Description" className="h-10 border-4 border-yellow-400" />
+                <Field name="category" as="select"  className="h-10 border-4 border-yellow-400">
+                    <option value="Choose Category" disabled>Choose Category</option>
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                    <option value="Family">Family</option>
+                    <option value="Study">Study</option>
+                </Field>
+                <button type="submit"  className="h-10 border-4 border-yellow-400 bg-yellow-300 font-bold">ADD TASK</button>
+            </Form>
+        </Formik>
     )
 }
 

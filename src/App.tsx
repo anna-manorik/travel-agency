@@ -82,7 +82,7 @@ function App() {
 
   return (
     <>
-      <h1>My App</h1>
+      <h1 className='text-green-900 text-lg font-black'>My App</h1>
       <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>
       <SearchForm searchFunk={searchTasks}></SearchForm>
@@ -93,7 +93,7 @@ function App() {
           deleteTaskFunk={deleteTask}
         />
       ) : notFound ? (
-        <p>Нічого не знайдено 😢</p>
+        <p>Any results 😢</p>
       ) : (
         <TaskList
           taskList={taskList}
