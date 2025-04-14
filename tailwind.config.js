@@ -5,7 +5,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '30': '7.5rem', // для w-30 = 120px
+      }
+    },
   },
   plugins: [],
 };
