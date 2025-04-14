@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 const Task = ({ id, title, description, category, editTaskFunk, deleteTaskFunk }: TaskPropsAdditional) => {
     const [isCompleted, setIsCompleted] = useState(false);
+    const categories = ["Home", "Work", "Family", "Study"];
 
     const toggleComplete = () => {
         setIsCompleted((prev) => !prev);
@@ -15,16 +16,15 @@ const Task = ({ id, title, description, category, editTaskFunk, deleteTaskFunk }
                 <b>Description:</b><span> <span id='description' onClick={() => editTaskFunk(id, 'description')}>{description}</span></span><br></br>
                 <b>Category:</b><select>
                     <option>{category}</option>
-                    <option>Home</option>
-                    <option>Work</option>
-                    <option>Family</option>
-                    <option>Study</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                    ))}
                 </select><br></br>
                 <span><b>Is Task completed?</b> {isCompleted ? '✅' : '❌'}</span><br></br>
-                <button onClick={toggleComplete} className="border-4 border-yellow-400 bg-yellow-300 font-bold mr-5 p-2">
+                <button onClick={toggleComplete} className="rounded-xl border-4 border-yellow-400 bg-yellow-300 font-bold mr-5 p-2">
                     {isCompleted ? 'Reopen' : 'Done'}
                 </button>
-                <button onClick={() => deleteTaskFunk(id)} className="border-4 border-yellow-400 bg-yellow-300 font-bold p-2">Delete</button>
+                <button onClick={() => deleteTaskFunk(id)} className="rounded-xl border-4 border-yellow-400 bg-yellow-300 font-bold p-2">Delete</button>
             </div>
         </>
     )

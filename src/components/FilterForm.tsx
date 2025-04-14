@@ -6,6 +6,7 @@ type FilterProps = {
 
 const FilterForm = ({ filterTasksFunk }: FilterProps) => {
     const [choosedCategory, setCategory] = useState('')
+    const categories = ["All", "Home", "Work", "Family", "Study"];
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = e.target.value;
@@ -18,11 +19,9 @@ const FilterForm = ({ filterTasksFunk }: FilterProps) => {
             <label className="font-bold">Filter by Category</label>
                 <select value={choosedCategory} onChange={handleChange} className="block h-10 border-4 border-yellow-400 ml-5">
                     <option value="" disabled>Choose Category</option>
-                    <option>All</option>
-                    <option>Home</option>
-                    <option>Work</option>
-                    <option>Family</option>
-                    <option>Study</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                    ))}
                 </select>
         </div>
     )
