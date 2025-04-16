@@ -88,8 +88,7 @@ function App() {
 
   return (
     <>
-            
-    <Header></Header>
+    <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tours" element={<Tours />} />
