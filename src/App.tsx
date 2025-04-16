@@ -5,7 +5,13 @@ import AddingForm from './components/AddingForm'
 import { TaskProps } from './types/TaskProps';
 import FilterForm from './components/FilterForm'
 import SearchForm from './components/SearchForm'
+import Header from './components/Header';
 import { nanoid } from 'nanoid';
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Tours from "./pages/Tours";
+import About from "./pages/About";
+import Contacts from "./pages/Contacts";
 
 function App() {
   const [taskList, setTaskList] = useState<TaskProps[]>([])
@@ -82,8 +88,15 @@ function App() {
 
   return (
     <>
+    <Header />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/tours" element={<Tours />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contacts" element={<Contacts />} />
+            </Routes>
       <h1 className='text-green-900 text-lg font-black'>My App</h1>
-      <AddingForm addTask={addTask}></AddingForm>
+      {/* <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>
       <SearchForm searchFunk={searchTasks}></SearchForm>
       {filteredTaskList.length > 0 ? (
@@ -100,7 +113,7 @@ function App() {
           editTaskFunk={editTask}
           deleteTaskFunk={deleteTask}
         />
-      )}
+      )} */}
     </> 
   )
 }
