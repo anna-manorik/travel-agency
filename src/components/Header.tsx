@@ -83,9 +83,9 @@ const Header = () => {
                 <a href="mailto:tour@tour.com"><span className="before:content-['✉️'] before:mr-2"> <p className="hidden md:block">tour@tour.com</p></span></a>
             </div>
             <div className="flex flex-col items-center">
-                <a href='https://instagram.com'><img src={instagram} className="w-10 " /></a>
-                <a href='https://facebook.com'><img src={facebook} className="w-6" /></a>
-                <a href='https://t.me'><img src={telegram} className="w-7" /></a>
+                <a href='https://instagram.com' target="_blank"><img src={instagram} className="w-10 " /></a>
+                <a href='https://facebook.com' target="_blank"><img src={facebook} className="w-6" /></a>
+                <a href='https://t.me' target="_blank"><img src={telegram} className="w-7" /></a>
             </div>
         </header>
     )
