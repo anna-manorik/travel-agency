@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import TaskList from './components/TaskList'
 import AddingForm from './components/AddingForm'
-import { TaskProps } from './types/TaskProps';
+import { TaskProps } from './types/Props';
 import FilterForm from './components/FilterForm'
 import SearchForm from './components/SearchForm'
 import Header from './components/Header';

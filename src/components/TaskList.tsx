@@ -1,4 +1,4 @@
-import { TaskListProps } from '../types/TaskProps';
+import { TaskListProps } from '../types/Props';
 import Task from './Task'
 
 export const TaskList = ({ taskList, editTaskFunk, deleteTaskFunk }: TaskListProps) => {
