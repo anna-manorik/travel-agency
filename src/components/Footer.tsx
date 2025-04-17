@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
-        <footer className='flex flex-col '>
+        <footer className='flex flex-col pt-10'>
             <article>
                 <p><b>© 2025 Турфірма "МрійТур". Всі права захищено.</b></p>
                 <p>Організовуємо яскраві подорожі по Україні та світу.</p><Link to="/about">Детальніше</Link>

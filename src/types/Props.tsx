@@ -15,3 +15,15 @@ export type TaskListProps = {
     editTaskFunk:(id: string, fieldType: string) => void;
     deleteTaskFunk: (id: string) => void;
 }
+
+export type DiscountProps = {
+    id: string;
+    title: string;
+    description: string;
+}
+
+export type DiscountListProps = {
+    discountList: DiscountProps[]
+}
+
+
