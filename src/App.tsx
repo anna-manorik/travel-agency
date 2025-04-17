@@ -6,6 +6,7 @@ import { TaskProps } from './types/TaskProps';
 import FilterForm from './components/FilterForm'
 import SearchForm from './components/SearchForm'
 import Header from './components/Header';
+import Footer from './components/Footer'
 import { nanoid } from 'nanoid';
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -88,14 +89,15 @@ function App() {
 
   return (
     <>
-    <Header />
+      <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tours" element={<Tours />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contacts" element={<Contacts />} />
             </Routes>
-      <h1 className='text-green-900 text-lg font-black'>My App</h1>
+      <Footer />
+
       {/* <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>
       <SearchForm searchFunk={searchTasks}></SearchForm>
