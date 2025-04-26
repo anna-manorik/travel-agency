@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from 'react'
 import logo1 from '../img/img01.jpg';
 import logo2 from '../img/img02.jpg';
 import logo3 from '../img/img03.jpg';
@@ -7,79 +8,67 @@ import logo6 from '../img/img06.jpg';
 import logo7 from '../img/img07.jpg';
 
 const Slider = () => {
+    const [currentImgId, setCurrentImgId] = useState(1);
+    const [autoSlide, setAutoSlide] = useState(false);
+    const listItems = useRef<HTMLImageElement[]>([]);
     const numbers = [logo1, logo2, logo3, logo4, logo5, logo6, logo7]
 
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
-const autoBtn = document.getElementById("auto");
-const stopBtn = document.getElementById("stop");
-const currentImg = document.querySelector('.active');
-let slidingLoop: any;
+    useEffect(() => {
+        listItems.current = Array.from(document.querySelectorAll(".slider-img"));
+        listItems.current.forEach((img, index) => {img.id = String(index + 1)});
+    }, [])
 
-const listItems = document.querySelectorAll(".slider-img");
-const images = Array.from(listItems).map((img, index) => img.id = String(index + 1));
-let currentImgId = Number(currentImg?.getAttribute('id'))
+    useEffect(() => {
+        const currentImg = listItems.current[currentImgId - 1];
+        if(currentImg) {
+            listItems.current.forEach(img => img.classList.remove('active'));
 
-function slideNext () {
-    const currentImg = document.querySelector('.active')
-    
-    if(currentImgId === listItems.length) {
-        currentImg?.classList.remove('active')
-        document.getElementById('1')?.classList.add('active')
-        currentImgId = 1;
-        return
+            currentImg?.classList.add('active')
+        }
+    }, [currentImgId])
+
+    useEffect(() => {
+        if (!autoSlide) return;
+        const interval = setInterval(() => {
+          slideNext();
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [autoSlide, currentImgId]);
+
+    function slideNext () {
+        if(currentImgId >= listItems.current.length) {
+            setCurrentImgId(1)
+        } else {
+            setCurrentImgId((prev) => prev + 1)
+        }
     }
 
-    if(currentImgId < listItems.length) {
-        currentImg?.classList.remove('active')
-        document.getElementById(String(currentImgId + 1))?.classList.add('active')
-        currentImgId += 1;
+    function slidePrev () {
+        if(currentImgId === 1) {
+            setCurrentImgId(listItems.current.length)
+        } else {
+            setCurrentImgId((prev) => prev - 1)
+        }
     }
-}
-
-nextBtn?.addEventListener('click', () => {
-    slideNext()
-})
-
-prevBtn?.addEventListener('click', () => {
-    const currentImg = document.querySelector('.active')
-
-    if(currentImgId === 1) {
-        currentImg?.classList.remove('active')
-        document.getElementById(String(listItems.length))?.classList.add('active')
-        currentImgId = listItems.length;
-        return
-    }
-
-    if(currentImgId <= listItems.length) {
-        currentImg?.classList.remove('active')
-        document.getElementById(String(currentImgId - 1))?.classList.add('active')
-        currentImgId -= 1;
-    }
-})
-
-
-autoBtn?.addEventListener ('click', () => {
-    slidingLoop = setInterval(() => {
-         slideNext()
-    }, 2000);
-})
-
-stopBtn?.addEventListener ('click', () => {
-    clearInterval(slidingLoop)
-})
-
 
     return (
         <>
         <ul id="slider">
-            {numbers.map((number, index) => (<li><img src={number} alt="" className={index === 0 ? 'slider-img active' : 'slider-img'} /></li>))}
+        {numbers.map((number, index) => (
+        <li key={index}>
+            <img
+            src={number}
+            alt=""
+            className={`slider-img ${index === currentImgId ? 'active' : ''}`}
+            />
+        </li>
+        ))}
         </ul>
         <div id="slide-buttons">
-            <button id="prev">&#10094;</button>
-            <button id="next">&#10095;</button>
-            <button id="auto">Auto</button>
-            <button id="stop">Stop</button>
+            <button onClick={slidePrev}>&#10094;</button>
+            <button onClick={slideNext}>&#10095;</button>
+            <button onClick={() => setAutoSlide(true)}>Auto</button>
+            <button onClick={() => setAutoSlide(false)}>Stop</button>
         </div>
     </>
     )
