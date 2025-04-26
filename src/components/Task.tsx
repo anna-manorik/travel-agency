@@ -1,4 +1,4 @@
-import { TaskPropsAdditional } from '../types/TaskProps'
+import { TaskPropsAdditional } from '../types/Props'
 import { useState } from 'react';
 
 const Task = ({ id, title, description, category, editTaskFunk, deleteTaskFunk }: TaskPropsAdditional) => {
