@@ -1,11 +1,18 @@
 import Slider from '../components/Slider'
+import LoginForm from '../components/LoginForm';
 import { useEffect, useState } from "react";
 import { DiscountProps } from '../types/Props'
-import { collection, getDocs } from 'firebase/firestore';
-// @ts-ignore
-import { db } from '../firebase/firebase';
+
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from '../config/firebase.ts';
 import DiscountList from '../components/DiscountList';
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+export {app, auth, db}
 
 const Home = () => {
     const [discountList, setDiscountList] = useState<DiscountProps[]>([])
@@ -27,6 +34,7 @@ const Home = () => {
     return (
         <>
             <div className="flex-1">Homepage</div>
+            <LoginForm />
             <Slider />
             <DiscountList discountList={discountList} />
         </>

@@ -31,13 +31,12 @@
 }
 
 #slide-buttons button {
-  width: 50px;
   margin-top: 30px;
-  height: 40px;
   background-color: #43daf4;
   border: 4px solid #024854;
   border-radius: 5px;
   font-size: 20px;
+  padding: 5px 10px;
 }
 
 #auto, #stop {
