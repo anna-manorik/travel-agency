@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import Tours from "./pages/Tours";
 import About from "./pages/About";
 import Contacts from "./pages/Contacts";
+import SignupForm from './pages/SignupForm'
 
 function App() {
   const [taskList, setTaskList] = useState<TaskProps[]>([])
@@ -91,10 +92,11 @@ function App() {
     <>
       <Header />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/tours" element={<Tours />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contacts" element={<Contacts />} />
+                <Route path="/signup" element={<SignupForm />} />
             </Routes>
       <Footer />
 

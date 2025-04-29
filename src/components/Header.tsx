@@ -53,28 +53,35 @@ const Header = () => {
                             `px-4 py-2 font-semibold transition duration-300 ${
                             isActive ? "text-red-500" : "text-black"
                             }`
-                        }>Головна</NavLink>
+                        }>Main</NavLink>
                     </li>
                     <li>
                         <NavLink  to="/tours" className={({ isActive }) =>
                             `px-4 py-2 font-semibold transition duration-300 ${
                             isActive ? "text-red-500" : "text-black"
                             }`
-                        }>Тури</NavLink >
+                        }>Tours</NavLink >
                     </li>
                     <li>
                         <NavLink to="/about" className={({ isActive }) =>
                             `px-4 py-2 font-semibold transition duration-300 ${
                             isActive ? "text-red-500" : "text-black"
                             }`
-                        }>Про нас</NavLink>
+                        }>About Us</NavLink>
                     </li>
                     <li>
                         <NavLink to="/contacts" className={({ isActive }) =>
                             `px-4 py-2 font-semibold transition duration-300 ${
                             isActive ? "text-red-500" : "text-black"
                             }`
-                        }>Контакти</NavLink>
+                        }>Contacts</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/signup" className={({ isActive }) =>
+                            `px-4 py-2 font-semibold transition duration-300 ${
+                            isActive ? "text-red-500" : "text-black"
+                            }`
+                        }>SignUp</NavLink>
                     </li>
                 </ul>
             </nav>
