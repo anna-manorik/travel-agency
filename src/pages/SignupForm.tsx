@@ -54,7 +54,7 @@ const SignupForm = () => {
             setUser(values)
             setIsSignedup(true)
             actions.resetForm()
-            navigate('/home');
+            navigate('/');
             console.log('User registered successfully!');
           } catch (error) {
             console.error('Registration error:', error);
