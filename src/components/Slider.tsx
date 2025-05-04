@@ -52,17 +52,17 @@ const Slider = () => {
     }
 
     return (
-        <>
+        <div className='flex flex-col'>
         <ul id="slider">
-        {numbers.map((number, index) => (
-        <li key={index}>
-            <img
-            src={number}
-            alt=""
-            className={`slider-img ${index === currentImgId ? 'active' : ''}`}
-            />
-        </li>
-        ))}
+            {numbers.map((number, index) => (
+            <li key={index} className='flex justify-center'>
+                <img
+                src={number}
+                alt=""
+                className={`slider-img ${index === currentImgId ? 'active' : ''}`}
+                />
+            </li>
+            ))}
         </ul>
         <div id="slide-buttons">
             <button onClick={slidePrev}>&#10094;</button>
@@ -70,7 +70,7 @@ const Slider = () => {
             <button onClick={() => setAutoSlide(true)}>Auto</button>
             <button onClick={() => setAutoSlide(false)}>Stop</button>
         </div>
-    </>
+    </div>
     )
 } 
 

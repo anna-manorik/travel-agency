@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type TaskProps = {
     id: string,
     title: string;
@@ -20,10 +22,25 @@ export type DiscountProps = {
     id: string;
     title: string;
     description: string;
+    image: string,
 }
 
 export type DiscountListProps = {
     discountList: DiscountProps[]
+}
+
+export type ToursProps = {
+    id: string;
+    title: string;
+    description: string;
+    date: Timestamp;
+    price: number;
+    rating: number;
+    image: string,
+}
+
+export type ToursListProps = {
+    toursList: ToursProps[]
 }
 
 
