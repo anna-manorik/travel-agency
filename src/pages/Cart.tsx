@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
-import { addItem, removeItem, clearCart } from '../redux/slice';
+import { addItem, decreaseItem, removeItem, clearCart } from '../redux/slice';
 
 const Cart = () => {
     const items = useSelector((state: RootState) => state.cart.items);
@@ -23,6 +23,21 @@ const Cart = () => {
                   <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                 </div>
                 <div className="flex gap-2">
+                    <button
+                    className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                    onClick={() =>
+                      dispatch(
+                        decreaseItem({
+                          id: item.id,
+                          name: item.name,
+                          price: item.price,
+                          quantity: 1
+                        })
+                      )
+                    }
+                  >
+                    -
+                  </button>
                   <button
                     className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     onClick={() =>
