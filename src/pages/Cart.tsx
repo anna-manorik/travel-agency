@@ -12,6 +12,7 @@ const Cart = () => {
         {items.length === 0 ? (
           <p className="text-center text-gray-500">Your cart is empty</p>
         ) : (
+            <>
           <ul className="space-y-4">
             {items.map(item => (
               <li
@@ -21,6 +22,7 @@ const Cart = () => {
                 <div className='mr-2'>
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                  <p className="font-semibold text-black-500">Price: {item.price}</p>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -63,6 +65,12 @@ const Cart = () => {
               </li>
             ))}
           </ul>
+          <div>
+            <p className="font-semibold text-gray-700">
+                Total: {items.reduce((acc, item) => acc + item.price * item.quantity, 0)} EUR
+            </p>
+          </div>
+          </>
         )}
         {items.length > 0 && (
           <div className="mt-6 text-center">
