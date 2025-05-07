@@ -39,63 +39,84 @@ const Header = () => {
     }, [location.pathname]);
 
     return (
-        <header className="flex justify-between items-center bg-white shadow-md p-4 w-1200 border-4 border-yellow-400">
-            <div><Link to="/"><img src={logo} className="block w-16 md:w-32 lg:w-48" /></Link></div>
-            <button className="flex flex-col justify-between w-6 h-5 md:hidden" onClick={toggleMenu} aria-label="Toggle Menu">
-                <span className="block h-0.5 bg-black"></span>
-                <span className="block h-0.5 bg-black"></span>
-                <span className="block h-0.5 bg-black"></span>
-            </button>
-            <nav className={isMobileMenuOpen ? 'sm:flex absolute top-50px left-10' : 'hidden md:flex'} id='mobile-menu'>
-                <ul className={isMobileMenuOpen ? 'flex-col bg-white p-10 border-2 border-yellow-400' : 'hidden md:flex justify-center gap-8 text-lg font-medium'}>
-                    <li>
-                        <NavLink to="/" className={({ isActive }) =>
-                            `px-4 py-2 font-semibold transition duration-300 ${
-                            isActive ? "text-red-500" : "text-black"
-                            }`
-                        }>Main</NavLink>
-                    </li>
-                    <li>
-                        <NavLink  to="/tours" className={({ isActive }) =>
-                            `px-4 py-2 font-semibold transition duration-300 ${
-                            isActive ? "text-red-500" : "text-black"
-                            }`
-                        }>Tours</NavLink >
-                    </li>
-                    <li>
-                        <NavLink to="/about" className={({ isActive }) =>
-                            `px-4 py-2 font-semibold transition duration-300 ${
-                            isActive ? "text-red-500" : "text-black"
-                            }`
-                        }>About Us</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/contacts" className={({ isActive }) =>
-                            `px-4 py-2 font-semibold transition duration-300 ${
-                            isActive ? "text-red-500" : "text-black"
-                            }`
-                        }>Contacts</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/signup" className={({ isActive }) =>
-                            `px-4 py-2 font-semibold transition duration-300 ${
-                            isActive ? "text-red-500" : "text-black"
-                            }`
-                        }>SignUp</NavLink>
-                    </li>
-                </ul>
-            </nav>
-            <div className="flex flex-col">
-                <a href="tel:+380999999999"><span className="before:content-['📞'] before:mr-2"> <p className="hidden md:block">+380999999999</p></span></a>
-                <a href="mailto:tour@tour.com"><span className="before:content-['✉️'] before:mr-2"> <p className="hidden md:block">tour@tour.com</p></span></a>
-            </div>
-            <div className="flex flex-col items-center">
-                <a href='https://instagram.com' target="_blank"><img src={instagram} className="w-10 " /></a>
-                <a href='https://facebook.com' target="_blank"><img src={facebook} className="w-6" /></a>
-                <a href='https://t.me' target="_blank"><img src={telegram} className="w-7" /></a>
-            </div>
+        <header className="flex justify-between items-center bg-white shadow-lg px-6 py-4 max-w-screen-xl mx-auto border-b-4 border-yellow-400 rounded-b-xl">
+          {/* Logo */}
+          <div>
+            <Link to="/">
+              <img src={logo} className="w-16 md:w-24 lg:w-32 hover:scale-105 transition-transform duration-300" alt="Logo" />
+            </Link>
+          </div>
+      
+          {/* Mobile Toggle Button */}
+          <button
+            className="md:hidden flex flex-col justify-between w-6 h-5"
+            onClick={toggleMenu}
+            aria-label="Toggle Menu"
+          >
+            <span className="block h-0.5 bg-black"></span>
+            <span className="block h-0.5 bg-black"></span>
+            <span className="block h-0.5 bg-black"></span>
+          </button>
+      
+          {/* Navigation */}
+          <nav
+            className={`${isMobileMenuOpen ? "absolute top-20 left-4 bg-white p-6 rounded-lg shadow-md border border-yellow-400 z-50" : "hidden"} md:block`}
+            id="mobile-menu"
+          >
+            <ul className={`flex flex-col md:flex-row md:items-center md:gap-6 text-base font-medium`}>
+              {[
+                { to: "/", label: "Main" },
+                { to: "/tours", label: "Tours" },
+                { to: "/about", label: "About Us" },
+                { to: "/contacts", label: "Contacts" },
+                { to: "/signup", label: "Sign Up" },
+              ].map((link) => (
+                <li key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `px-4 py-2 rounded transition duration-300 ${
+                        isActive ? "text-yellow-500 font-bold" : "text-gray-700 hover:text-yellow-600"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+              <li>
+                <NavLink to="/cart" className="text-2xl hover:scale-110 transition-transform">
+                  🛒
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
+      
+          {/* Contact Info */}
+          <div className="hidden md:flex flex-col text-sm text-right mr-4">
+            <a href="tel:+380999999999" className="hover:text-yellow-600">
+              📞 +380999999999
+            </a>
+            <a href="mailto:tour@tour.com" className="hover:text-yellow-600">
+              ✉️ tour@tour.com
+            </a>
+          </div>
+      
+          {/* Social Icons */}
+          <div className="hidden md:flex gap-3 items-center">
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+              <img src={instagram} alt="Instagram" className="w-6 hover:scale-110 transition-transform" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+              <img src={facebook} alt="Facebook" className="w-5 hover:scale-110 transition-transform" />
+            </a>
+            <a href="https://t.me" target="_blank" rel="noreferrer">
+              <img src={telegram} alt="Telegram" className="w-6 hover:scale-110 transition-transform" />
+            </a>
+          </div>
         </header>
-    )
+      );
+      
 }
 
 export default Header
