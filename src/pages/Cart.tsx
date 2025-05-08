@@ -20,10 +20,8 @@ const Cart = () => {
         dispatch(removeItem(id))
       };
 
-      const total = useMemo(
-        () =>
-        items.reduce((acc, item) => acc + item.price * item.quantity, 0),
-        [items]
+      const total = useMemo(() =>
+        items.reduce((acc, item) => acc + item.price * item.quantity, 0), [items]
       );
     
   
@@ -40,10 +38,10 @@ const Cart = () => {
                 key={item.id}
                 className="flex justify-between items-center border-b pb-3"
               >
-                <div className='mr-2'>
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
-                  <p className="font-semibold text-black-500">Price: {item.price}</p>
+                <div className='flex mr-2'>
+                  <p className="font-semibold text-xl pr-5 w-48">{item.name}</p>
+                  
+                  <p className="font-semibold text-black-500 pr-5">{item.price}</p>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -52,6 +50,7 @@ const Cart = () => {
                   >
                     -
                   </button>
+                  <p className="text-lg text-black-500">{item.quantity}</p>
                   <button
                     className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     onClick={() => handleIncrease(item)}
@@ -69,7 +68,7 @@ const Cart = () => {
             ))}
           </ul>
           <div>
-            <p className="font-semibold text-gray-700">
+            <p className="font-semibold text-xl text-gray-700">
                 Total: {total} EUR
             </p>
           </div>

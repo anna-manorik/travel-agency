@@ -48,6 +48,7 @@ export type CartItem = {
     name: string;
     price: number;
     quantity: number;
+    date: string;
   };
   
 export type CartState = {
