@@ -7,14 +7,9 @@ import FilterForm from './components/FilterForm'
 import SearchForm from './components/SearchForm'
 import Header from './components/Header';
 import Footer from './components/Footer'
+import RoutesList from './components/RoutesList'
 import { nanoid } from 'nanoid';
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Tours from "./pages/Tours";
-import About from "./pages/About";
-import Contacts from "./pages/Contacts";
-import SignupForm from './pages/SignupForm'
-import Cart from './pages/Cart'
+
 
 function App() {
   const [taskList, setTaskList] = useState<TaskProps[]>([])
@@ -92,14 +87,7 @@ function App() {
   return (
     <>
       <Header />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/tours" element={<Tours />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/signup" element={<SignupForm />} />
-                <Route path="/cart" element={<Cart />} />
-            </Routes>
+      <RoutesList />
       <Footer />
 
       {/* <AddingForm addTask={addTask}></AddingForm>

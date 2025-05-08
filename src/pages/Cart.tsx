@@ -1,10 +1,31 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { addItem, decreaseItem, removeItem, clearCart } from '../redux/slice';
+import { CartItem } from '../types/Props'
+import { useMemo } from 'react';
 
 const Cart = () => {
     const items = useSelector((state: RootState) => state.cart.items);
     const dispatch = useDispatch<AppDispatch>();
+
+      const handleDecrease = (item: CartItem) => {
+        dispatch(decreaseItem({ ...item, quantity: 1 }));
+      };
+      
+      const handleIncrease = (item: CartItem) => {
+        dispatch(addItem({ ...item, quantity: 1 }));
+      };
+
+      const handleCartClean = (id: string) => {
+        dispatch(removeItem(id))
+      };
+
+      const total = useMemo(
+        () =>
+        items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+        [items]
+      );
+    
   
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-md mt-10">
@@ -27,37 +48,19 @@ const Cart = () => {
                 <div className="flex gap-2">
                     <button
                     className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                    onClick={() =>
-                      dispatch(
-                        decreaseItem({
-                          id: item.id,
-                          name: item.name,
-                          price: item.price,
-                          quantity: 1
-                        })
-                      )
-                    }
+                    onClick={() => handleDecrease(item)}
                   >
                     -
                   </button>
                   <button
                     className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                    onClick={() =>
-                      dispatch(
-                        addItem({
-                          id: item.id,
-                          name: item.name,
-                          price: item.price,
-                          quantity: 1
-                        })
-                      )
-                    }
+                    onClick={() => handleIncrease(item)}
                   >
                     +
                   </button>
                   <button
                     className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    onClick={() => dispatch(removeItem(item.id))}
+                    onClick={() => handleCartClean(item.id)}
                   >
                     Delete
                   </button>
@@ -67,7 +70,7 @@ const Cart = () => {
           </ul>
           <div>
             <p className="font-semibold text-gray-700">
-                Total: {items.reduce((acc, item) => acc + item.price * item.quantity, 0)} EUR
+                Total: {total} EUR
             </p>
           </div>
           </>

@@ -3,13 +3,14 @@ import star from '../img/star.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../redux/store'
 import { addItem } from '../redux/slice'
+// import { CartItem } from '../types/Props'
 
 const ToursList = ({ toursList }: ToursListProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    // const handlerAdd = (tour: ToursProps) => {
-    //     addItem()
-    // }
+    const handleAdd = (item: ToursProps) => {
+        dispatch(addItem({...item, name: item.title, quantity: 1}))
+    }
 
     return (
         <ul className='mt-10 flex'>
@@ -18,12 +19,7 @@ const ToursList = ({ toursList }: ToursListProps) => {
                 <h3 className='font-bold text-xl p-2 bg-green-200'>{item.title}</h3>
                 <p className='text-lg h-30 overflow-hidden p-2 bg-green-100'>{item.description}</p>
                 <p className='text-xl font-bold p-2 bg-green-400'>{item.price} EUR</p>
-                <button onClick={() => dispatch(addItem({
-  id: item.id,
-  name: item.title,
-  price: item.price,
-  quantity: 1
-}))} className='h-16 font-bold p-5 hover:bg-yellow-200'><span className="font-size: 34px;">BUY IT NOW 🛒</span></button>
+                <button onClick={() => handleAdd(item)} className='h-16 font-bold p-5 hover:bg-yellow-200'><span className="font-size: 34px;">BUY IT NOW 🛒</span></button>
                 <p className='text-lg p-2 bg-green-200'>Start: {item.date.toDate().toLocaleDateString()}</p>
                 <div className="flex justify-center px-2 bg-yellow-100 p-2">
                     {Array.from({ length: item.rating }).map((_, i) => (
