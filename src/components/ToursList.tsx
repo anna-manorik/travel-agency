@@ -9,7 +9,6 @@ const ToursList = ({ toursList }: ToursListProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const handleAdd = (item: ToursProps) => {
-        // localStorage.setItem('card', JSON.stringify(item))
         dispatch(addItem({...item, date: item.date.toDate().toISOString(), name: item.title, quantity: 1}))
     }
 

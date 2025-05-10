@@ -37,6 +37,7 @@ export type ToursProps = {
     price: number;
     rating: number;
     image: string,
+    category: string,
 }
 
 export type ToursListProps = {
