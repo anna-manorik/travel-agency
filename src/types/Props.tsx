@@ -37,6 +37,7 @@ export type ToursProps = {
     price: number;
     rating: number;
     image: string,
+    category: string,
 }
 
 export type ToursListProps = {
@@ -48,6 +49,7 @@ export type CartItem = {
     name: string;
     price: number;
     quantity: number;
+    date: string;
   };
   
 export type CartState = {

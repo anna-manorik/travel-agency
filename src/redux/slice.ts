@@ -1,13 +1,43 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CartItem, CartState } from '../types/Props'
+import { ToursListProps, ToursProps } from '../types/Props'
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from '../config/firebase.ts';
 
-const initialState: CartState = {
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const initialCartState: CartState = {
   items: []
 };
 
+  type ToursState = {
+    allTours: ToursProps[];
+    filteredTours: ToursProps[];
+    loading: boolean;
+  };
+  
+  const initialFilterState: ToursState = {
+    allTours: [],
+    filteredTours: [],
+    loading: false
+  };
+
+  export const fetchTours = createAsyncThunk(
+    'tours/fetchTours',
+    async () => {
+      const snapshot = await getDocs(collection(db, "tours"));
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as ToursProps[];
+    }
+  );
+
 const cartSlice = createSlice({
   name: 'cart',
-  initialState,
+  initialState: initialCartState,
   reducers: {
     addItem(state, action: PayloadAction<CartItem>) {
       const item = state.items.find(item => item.id === action.payload.id);
@@ -20,8 +50,8 @@ const cartSlice = createSlice({
     decreaseItem(state, action: PayloadAction<CartItem>) {
         const item = state.items.find(item => item.id === action.payload.id);
         if (!item) return;
-        if (item.quantity <= action.payload.quantity) {
-            state.items = state.items.filter(item => item.id !== item.id);
+        if (item.quantity === 1) {
+            state.items = state.items.filter(item => item.id !== action.payload.id);
         } else {
             item.quantity -= action.payload.quantity;
         }
@@ -35,5 +65,44 @@ const cartSlice = createSlice({
   }
 });
 
+const toursSlice = createSlice({
+    name: 'filter',
+    initialState: initialFilterState,
+    reducers: {
+        filterByCategory(state, action: PayloadAction<string>){
+            const category = action.payload;
+            state.filteredTours = category === "All"
+              ? state.allTours
+              : state.allTours.filter(tour => tour.category === category);
+        },
+        filterByPrice(state, action: PayloadAction<{ minPrice: number, maxPrice: number }>){
+            state.filteredTours = state.allTours.filter(tour => tour.price >= action.payload.minPrice && tour.price <= action.payload.maxPrice)
+        },
+        filterByDate(state, action: PayloadAction<string>){
+            state.filteredTours = state.allTours.filter(tour => new Date(tour.date.seconds * 1000).toLocaleDateString('en-CA') === action.payload)
+
+        },
+        filterByRate(state, action: PayloadAction<string>){
+            const rating = action.payload;
+            state.filteredTours = rating === 'All'
+            ? state.allTours
+            : state.allTours.filter(tour => tour.rating === Number(rating))
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+          .addCase(fetchTours.pending, (state) => {
+            state.loading = true;
+          })
+          .addCase(fetchTours.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allTours = action.payload;
+            state.filteredTours = action.payload;
+          });
+      }
+})
+
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
-export default cartSlice.reducer;
+export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
+export const cartReducer = cartSlice.reducer;
+export const toursReducer = toursSlice.reducer;
