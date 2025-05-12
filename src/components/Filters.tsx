@@ -8,26 +8,53 @@ type PriceFilter = {
     maxPrice: number
 }
 
+type FilterTypeMap = {
+    category: string;
+    price: PriceFilter;
+    date: string;
+    rate: string;
+};
+
 const Filters = () => {
     const dispatch = useDispatch<AppDispatch>();
           
-    const handlerFilterByCategory = (category: string) => {
-        dispatch(filterByCategory(category))
-    }
+    // const handlerFilterByCategory = (category: string) => {
+    //     dispatch(filterByCategory(category))
+    // }
 
-    const handlerFilterByPrice = (values: PriceFilter) => {
-        dispatch(filterByPrice({ minPrice: values.minPrice, maxPrice: values.maxPrice }))
-    }
+    // const handlerFilterByPrice = (values: PriceFilter) => {
+    //     dispatch(filterByPrice({ minPrice: values.minPrice, maxPrice: values.maxPrice }))
+    // }
 
-    const handlerFilterByDate = (date: string) => {
-        dispatch(filterByDate(date))
-    }
+    // const handlerFilterByDate = (date: string) => {
+    //     dispatch(filterByDate(date))
+    // }
 
-    const handlerFilterByRate = (rating: string) => {
-        dispatch(filterByRate(rating))
-    }
+    // const handlerFilterByRate = (rating: string) => {
+    //     dispatch(filterByRate(rating))
+    // }
 
-    
+    const handleChange = <T extends keyof FilterTypeMap>(
+        type: T,
+        value: FilterTypeMap[T]
+      ) => {
+        switch (type) {
+          case 'category':
+            dispatch(filterByCategory(value as FilterTypeMap['category']));
+            break;
+          case 'price':
+            dispatch(filterByPrice(value as FilterTypeMap['price']));
+            break;
+          case 'date':
+            dispatch(filterByDate(value as FilterTypeMap['date']));
+            break;
+          case 'rate':
+            dispatch(filterByRate(value as FilterTypeMap['rate']));
+            break;
+        }
+      };
+
+    const inputClass = "border border-gray-300 rounded-lg px-3 py-2 focus:outline-yellow-400";
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6 text-sm sm:text-base">
@@ -35,8 +62,8 @@ const Filters = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <label className="font-semibold min-w-[150px]">Filter by category:</label>
             <select
-            onChange={(e) => handlerFilterByCategory(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-yellow-400"
+            onChange={(e) => handleChange('category', e.target.value)}
+            className={inputClass}
             >
             <option value="All">All</option>
             <option value="Excursion">Excursion</option>
@@ -50,7 +77,7 @@ const Filters = () => {
             <Formik
             initialValues={{ minPrice: 0, maxPrice: 0 }}
             onSubmit={(values, actions) => {
-                handlerFilterByPrice(values);
+                handleChange('price', values);
             }}
             >
             <Form className="flex sm:flex-row items-center gap-3">
@@ -83,8 +110,8 @@ const Filters = () => {
             <label className="font-semibold min-w-[150px]">Filter by date:</label>
             <input
             type="date"
-            onChange={(e) => handlerFilterByDate(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-yellow-400"
+            onChange={(e) => handleChange('date', e.target.value)}
+            className={inputClass}
             />
         </div>
 
@@ -92,8 +119,8 @@ const Filters = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <label className="font-semibold min-w-[150px]">Filter by rating:</label>
             <select
-            onChange={(e) => handlerFilterByRate(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-yellow-400"
+            onChange={(e) => handleChange('rate', e.target.value)}
+            className={inputClass}
             >
             <option value="All">All</option>
             <option value="5">⭐⭐⭐⭐⭐</option>
