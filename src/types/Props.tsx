@@ -29,6 +29,11 @@ export type DiscountListProps = {
     discountList: DiscountProps[]
 }
 
+export type Review = {
+    author: string;
+    text: string;
+};
+
 export type ToursProps = {
     id: string;
     title: string;
@@ -38,6 +43,8 @@ export type ToursProps = {
     rating: number;
     image: string,
     category: string,
+    sliderList: string[]
+    reviews: Review[]
 }
 
 export type ToursListProps = {
@@ -56,4 +63,13 @@ export type CartState = {
     items: CartItem[];
   };
 
+export type ToursState = {
+    allTours: ToursProps[];
+    filteredTours: ToursProps[];
+    loading: boolean;
+  };
 
+export type TourInfoState = {
+    selectedTour: ToursProps | null;
+    loading: boolean
+  };

@@ -4,6 +4,7 @@ import About from "../pages/About";
 import Contacts from "../pages/Contacts";
 import SignupForm from '../pages/SignupForm'
 import Cart from '../pages/Cart'
+import TourInfo from '../pages/TourInfo'
 import { Routes, Route } from "react-router-dom";
 
 
@@ -16,6 +17,7 @@ const RoutesList = () => {
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/signup" element={<SignupForm />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path='/tour-info' element={<TourInfo />} />
             </Routes>
     )
 }

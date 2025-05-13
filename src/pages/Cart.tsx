@@ -18,6 +18,7 @@ const Cart = () => {
 
       const handleCartClean = (id: string) => {
         dispatch(removeItem(id))
+        localStorage.removeItem('cart')
       };
 
       const total = useMemo(() =>

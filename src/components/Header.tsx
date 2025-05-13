@@ -6,10 +6,14 @@ import logo from '../img/logo.jpg';
 import facebook from '../img/facebook.svg';
 import instagram from '../img/instagram.svg';
 import telegram from '../img/telegram.svg';
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [isCartFull, setIsCartFull] = useState(false)
     const location = useLocation();
+    const items = useSelector((state: RootState) => state.cart.items);
 
     const toggleMenu = () => {
         setMobileMenuOpen(!isMobileMenuOpen)
@@ -38,6 +42,10 @@ const Header = () => {
         closeMobileMenu();
     }, [location.pathname]);
 
+    useEffect(() => {
+      setIsCartFull(items.length === 0 ? false : true)
+    }, [items])
+
     return (
         <header className="flex flex-wrap items-center justify-between bg-white shadow-lg px-4 py-3 max-w-screen-xl mx-auto border-b-4 border-yellow-400 rounded-b-xl">
   {/* Logo */}
@@ -52,7 +60,8 @@ const Header = () => {
   </div>
 
   {/* Cart Icon - always visible */}
-  <div className="order-3 md:order-none md:ml-auto px-4">
+  <div className="order-3 md:order-none md:ml-auto px-4 relative">
+    <div className={isCartFull ? 'w-[15px] h-[15px] rounded-full bg-red-500 absolute bottom-5 left-4' : 'hidden'} ></div>
     <NavLink to="/cart" className="text-3xl hover:scale-110 transition-transform">
       🛒
     </NavLink>

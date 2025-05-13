@@ -1,17 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
-import logo1 from '../img/img01.jpg';
-import logo2 from '../img/img02.jpg';
-import logo3 from '../img/img03.jpg';
-import logo4 from '../img/img04.jpg';
-import logo5 from '../img/img05.jpg';
-import logo6 from '../img/img06.jpg';
-import logo7 from '../img/img07.jpg';
 
-const Slider = () => {
+type SliderProps = {
+    photoList: string[];
+  };
+
+const Slider = ({ photoList }: SliderProps) => {
     const [currentImgId, setCurrentImgId] = useState(1);
     const [autoSlide, setAutoSlide] = useState(false);
     const listItems = useRef<HTMLImageElement[]>([]);
-    const numbers = [logo1, logo2, logo3, logo4, logo5, logo6, logo7]
+    
 
     useEffect(() => {
         listItems.current = Array.from(document.querySelectorAll(".slider-img"));
@@ -54,10 +51,10 @@ const Slider = () => {
     return (
         <div className='flex flex-col'>
         <ul id="slider">
-            {numbers.map((number, index) => (
+            {photoList?.map((photo, index) => (
             <li key={index} className='flex justify-center'>
                 <img
-                src={number}
+                src={photo}
                 alt=""
                 className={`slider-img ${index === currentImgId ? 'active' : ''}`}
                 />
