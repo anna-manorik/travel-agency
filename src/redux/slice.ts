@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CartItem, CartState } from '../types/Props'
-import { ToursListProps, ToursProps } from '../types/Props'
+import { ToursProps, ToursState, TourInfoState } from '../types/Props'
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
@@ -8,19 +8,18 @@ import { firebaseConfig } from '../config/firebase.ts';
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const initialCartState: CartState = {
-  items: []
-};
-
-  type ToursState = {
-    allTours: ToursProps[];
-    filteredTours: ToursProps[];
-    loading: boolean;
+  const initialCartState: CartState = {
+    items: []
   };
-  
+
   const initialFilterState: ToursState = {
     allTours: [],
     filteredTours: [],
+    loading: false
+  };
+
+  const initialTourInfoState: TourInfoState = {
+    selectedTour: null,
     loading: false
   };
 
@@ -99,10 +98,22 @@ const toursSlice = createSlice({
             state.allTours = action.payload;
             state.filteredTours = action.payload;
           });
-      }
+    }
 })
+
+const tourInfoSlice = createSlice({
+  name: 'tours',
+  initialState: initialTourInfoState,
+  reducers: {
+    setSelectedTour: (state, action: PayloadAction<ToursProps>) => {
+      state.selectedTour = action.payload;
+    },
+  }
+});
 
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
 export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
+export const { setSelectedTour } = tourInfoSlice.actions;
 export const cartReducer = cartSlice.reducer;
 export const toursReducer = toursSlice.reducer;
+export const tourInfoReducer =  tourInfoSlice.reducer;
