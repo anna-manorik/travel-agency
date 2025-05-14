@@ -29,7 +29,7 @@ const ToursList = ({ toursList }: ToursListProps) => {
                 <h3 className='font-bold text-xl p-2 bg-green-200'>{item.title}</h3>
                 <p className='text-lg h-30 overflow-hidden p-2 bg-green-100'>{item.description}</p>
                 <p className='text-xl font-bold p-2 bg-green-400'>{item.price} EUR</p>
-                <button onClick={() => handleAddToCart(item)} className='h-16 font-bold p-5 hover:bg-yellow-200'><span className="font-size: 34px;">BUY IT NOW 🛒</span></button>
+                <button onClick={() => handleAddToCart(item)} className='w-full h-16 font-bold p-5 bg-orange-500 hover:bg-yellow-200'><span className="font-size: 34px;">BUY IT NOW 🛒</span></button>
                 <p className='text-lg p-2 bg-green-200'>Start: {item.date.toDate().toLocaleDateString()}</p>
                 <div className="flex justify-center px-2 bg-yellow-100 p-2">
                     {Array.from({ length: item.rating }).map((_, i) => (

@@ -61,7 +61,7 @@ const Header = () => {
 
   {/* Cart Icon - always visible */}
   <div className="order-3 md:order-none md:ml-auto px-4 relative">
-    <div className={isCartFull ? 'w-[15px] h-[15px] rounded-full bg-red-500 absolute bottom-5 left-4' : 'hidden'} ></div>
+    <div className={isCartFull ? 'w-[20px] h-[20px] rounded-full text-sm text-white bg-red-500 absolute bottom-5 left-4' : 'hidden'} >{items.length}</div>
     <NavLink to="/cart" className="text-3xl hover:scale-110 transition-transform">
       🛒
     </NavLink>
