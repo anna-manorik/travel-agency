@@ -6,6 +6,7 @@ import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../pages/Home';
 import { toast, ToastContainer } from 'react-toastify';
 import star from '../img/star.png'
+import { v4 as uuidv4 } from 'uuid';
 
 const validationSchema = Yup.object({
     author: Yup.string()
@@ -35,7 +36,7 @@ const Comments = (tour: ToursProps) => {
       
         try {
           await updateDoc(tourRef, {
-            reviews: arrayUnion({...review, approved: false, date: new Date().toISOString()})
+            reviews: arrayUnion({...review, approved: false, date: new Date().toISOString(), id: uuidv4()})
           });
         } catch (error) {
           console.error('Error during adding review', error);
@@ -53,7 +54,7 @@ const Comments = (tour: ToursProps) => {
                 {approvedReviews.length ? (
                     approvedReviews.map((review, index) => (
                     <div
-                        key={index}
+                        key={review.id}
                         className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
                     >
                         <p className="text-gray-800 text-base mb-4">"{review.text}"</p>
