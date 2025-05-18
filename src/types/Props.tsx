@@ -30,8 +30,12 @@ export type DiscountListProps = {
 }
 
 export type Review = {
+    id?: string;
     author: string;
     text: string;
+    rating: number;
+    date?: string;
+    approved?: boolean;
 };
 
 export type ToursProps = {
