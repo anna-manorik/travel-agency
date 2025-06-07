@@ -8,6 +8,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
+import { doc, setDoc } from 'firebase/firestore';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -62,7 +63,21 @@ const SignupForm = () => {
     }
 
     const signup = async (email: string, password: string) => {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+    // 2. Зберігаємо додаткові дані користувача (зокрема роль) у Firestore
+    // Використовуємо UID користувача з Authentication як ID документа у колекції 'users'
+    await setDoc(doc(db, 'users', user.uid), {
+      email: user.email,
+      role: 'user', // За замовчуванням, новий користувач має роль 'user'
+    //   createdAt: new Date(), // Можна додати timestamp створення
+    });
+
+    console.log('Користувач успішно зареєстрований:', user.email);
+    console.log('Дані користувача (включаючи роль) збережені у Firestore під UID:', user.uid);
+    return user;
+
     };
 
     return (

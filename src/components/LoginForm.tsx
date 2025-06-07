@@ -1,17 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged, getIdTokenResult, getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { httpsCallable } from "firebase/functions";
+import { getFunctions } from "firebase/functions";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 export {app, auth, db}
+export const functions = getFunctions(app);
 
 type AuthUser = {
     login: string;
@@ -31,6 +34,38 @@ const LoginForm = () => {
     const [user, setUser] = useState<AuthUser | null>(null)
     const [isLogged, setIsLogged] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+
+    useEffect(() => {
+        const setMyselfAsAdmin = async () => {
+            const setAdminRole = httpsCallable(functions, "setAdminRole");
+            await setAdminRole({ email: "braziliada@gmail.com" });
+            await auth.currentUser?.getIdToken(true);
+
+            const tokenResult = await auth.currentUser?.getIdTokenResult();
+          const role = tokenResult?.claims.role;
+    
+          console.log("Роль користувача:", tokenResult);
+        };
+
+        setMyselfAsAdmin();
+    }, [isLogged]);
+
+    // useEffect(() => {
+    //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    //     if (user) {
+            
+    //       const tokenResult = await auth.currentUser?.getIdTokenResult();
+    //       const role = tokenResult?.claims.role;
+    
+    //       console.log("Роль користувача:", tokenResult);
+    
+    //       // Можна зберегти роль у Context або Redux:
+    //       // setUserRole(role);
+    //     }
+    //   });
+    
+    //   return () => unsubscribe();
+    // }, [isLogged]);
     
         const handleLogin = (values: AuthUser, actions: FormikHelpers<AuthUser>) => {
             setUser(values)
@@ -42,6 +77,7 @@ const LoginForm = () => {
             sessionStorage.removeItem('token');
             setIsLogged(false)
             setUser(null)
+            signOut(auth)
         };
 
         const checkUser = async (login: string, password: string) => {

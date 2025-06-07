@@ -92,6 +92,7 @@ const Header = () => {
         { to: "/about", label: "About Us" },
         { to: "/contacts", label: "Contacts" },
         { to: "/signup", label: "Sign Up" },
+        { to: "/admin", label: "Admin Panel" },
       ].map((link) => (
         <li key={link.to}>
           <NavLink
