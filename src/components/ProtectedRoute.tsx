@@ -8,7 +8,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { currentUser } = useAuth();
-  console.log('!!!!0', currentUser)
 
   // 1. Стан завантаження: Показуємо щось, поки ми отримуємо дані про користувача
   if (currentUser.loading) {

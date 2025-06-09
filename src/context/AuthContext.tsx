@@ -45,17 +45,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // --- ЛОГІКА ОТРИМАННЯ РОЛІ ---
         let userRole: 'user' | 'admin' = 'user'; // Роль за замовчуванням
 
-        // Варіант А: Отримання ролі з Custom Claims (якщо використовуєте Cloud Functions)
-        // try {
-        //   const idTokenResult = await user.getIdTokenResult();
-        //   userRole = (idTokenResult.claims.role === 'admin' ? 'admin' : 'user');
-        //   console.log("AuthProvider: Role from Custom Claims:", userRole);
-        // } catch (error) {
-        //   console.error("AuthProvider: Error getting ID token result:", error);
-        //   // Fallback, якщо виникає помилка з claims, можна спробувати Firestore або залишити 'user'
-        // }
-
-        
         // Варіант Б: Отримання ролі з Cloud Firestore (якщо зберігаєте ролі там)
         // Раніше, коли ми не використовували Custom Claims
         try {

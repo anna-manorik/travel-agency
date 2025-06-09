@@ -7,14 +7,12 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { httpsCallable } from "firebase/functions";
-import { getFunctions } from "firebase/functions";
+import { useAuth } from '../context/AuthContext.tsx';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 export {app, auth, db}
-export const functions = getFunctions(app);
 
 type AuthUser = {
     login: string;
@@ -31,52 +29,20 @@ const validationSchema = Yup.object({
   });
 
 const LoginForm = () => {
-    const [user, setUser] = useState<AuthUser | null>(null)
-    const [isLogged, setIsLogged] = useState(false)
+    // const [isLogged, setIsLogged] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const { currentUser } = useAuth()
 
-    useEffect(() => {
-        const setMyselfAsAdmin = async () => {
-            const setAdminRole = httpsCallable(functions, "setAdminRole");
-            await setAdminRole({ email: "braziliada@gmail.com" });
-            await auth.currentUser?.getIdToken(true);
-
-            const tokenResult = await auth.currentUser?.getIdTokenResult();
-          const role = tokenResult?.claims.role;
-    
-          console.log("Роль користувача:", tokenResult);
-        };
-
-        setMyselfAsAdmin();
-    }, [isLogged]);
-
-    // useEffect(() => {
-    //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    //     if (user) {
-            
-    //       const tokenResult = await auth.currentUser?.getIdTokenResult();
-    //       const role = tokenResult?.claims.role;
-    
-    //       console.log("Роль користувача:", tokenResult);
-    
-    //       // Можна зберегти роль у Context або Redux:
-    //       // setUserRole(role);
-    //     }
-    //   });
-    
-    //   return () => unsubscribe();
-    // }, [isLogged]);
+    console.log('!!!! curUser', currentUser)
     
         const handleLogin = (values: AuthUser, actions: FormikHelpers<AuthUser>) => {
-            setUser(values)
             checkUser(values.login, values.password)
             actions.resetForm();
         };
 
         const handleLogout = () => {
-            sessionStorage.removeItem('token');
-            setIsLogged(false)
-            setUser(null)
+            localStorage.removeItem('token');
+            // setIsLogged(false)
             signOut(auth)
         };
 
@@ -86,17 +52,17 @@ const LoginForm = () => {
                 const user = userCredential.user;
                 
                 const token = await user.getIdToken();
-                sessionStorage.setItem('token', token);
-                setIsLogged(true)
-                console.log('Logged in successfully:', user);
+                localStorage.setItem('token', token);
+                // setIsLogged(true)
               } catch (error: any) {
-                setIsLogged(false)
+                // setIsLogged(false)
                 console.error('Login failed:', error.message);
               }
         }
         
         return (
             <div className='flex flex-col items-center'>
+                <span className='text-lg font-bold p-5'>{!currentUser.loading && currentUser.uid !== null ? `Welcome, ${currentUser.email}! Your current role: ${currentUser.role || 'N/A'}` : 'Please, login for proseed!'}</span>
                 <Formik initialValues={{login: '', password: ''}} onSubmit={(values, actions) => {handleLogin(values, actions)}} validationSchema={validationSchema}>
                     <Form className="flex flex-col mb-10 max-w-md mx-auto p-4 bg-white rounded shadow-md">
                         <Field as="input" name="login" type="email" placeholder="Login" className="h-10 border-4 border-yellow-400" />
@@ -118,8 +84,8 @@ const LoginForm = () => {
                         <button type="submit" onClick={() => handleLogin} className="h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold">LOG IN</button>
                     </Form>
                 </Formik>
-                <span className='text-lg font-bold p-5'>{isLogged ? `Welcome, ${user?.login}!` : 'Please, login for proseed!'}</span>
-                <button disabled={!isLogged} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
+                
+                <button disabled={!currentUser.uid} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
             </div>
         )
 }
