@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Review, ToursProps } from '../types/Props'
 import { useFormik, FieldArray, Form, Formik, FormikHelpers } from 'formik';
-import * as Yup from 'yup'; // Для валідації схеми
+import * as Yup from 'yup';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
+import ToursList from '../components/ToursList.tsx';
+import AdminToursManagement from '../components/AdminToursManagement.tsx';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -62,25 +64,9 @@ const TourSchema = Yup.object().shape({
 });
 
 const AdminPage = () => {
-//     const formik = useFormik<TourFormValues>({
-//     initialValues: {
-//         title: '',
-//         description: '',
-//         date: Timestamp.fromDate(new Date()),
-//         price: 0,
-//         rating: 1,
-//         image: '',
-//         category: '',
-//         sliderList: [],
-//     },
-//     validationSchema: TourSchema,
-//     onSubmit: (values) => {
-//       console.log('Дані форми відправлені:', values);
-//       addDoc(collection(db, 'tours'), values);
-//     },
-//   });
-
-const initialValues: TourFormValues = {
+    
+    
+    const initialValues: TourFormValues = {
         title: '',
         description: '',
         date: Timestamp.fromDate(new Date()),
@@ -94,11 +80,6 @@ const initialValues: TourFormValues = {
     const handleSubmit = async (values: TourFormValues, actions: FormikHelpers<TourFormValues>) => {
     try {
       actions.setSubmitting(true); // Встановлюємо стан "відправляється"
-
-    //   const tourDataToSave = {
-    //     ...values,
-    //     createdAt: values.createdAt || new Date(), // Використовуємо дату з форми, або поточну
-    //   };
 
       // Додаємо документ до колекції 'tours'. Firebase генерує ID автоматично.
       const docRef = await addDoc(collection(db, 'tours'), values);
@@ -116,6 +97,7 @@ const initialValues: TourFormValues = {
   };
 
   return (
+    <>
     <div style={{ maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
       <h2>Додати новий тур</h2>
       <Formik initialValues={initialValues} onSubmit={(values, actions) => {handleSubmit(values, actions)}} validationSchema={TourSchema}>
@@ -297,6 +279,8 @@ const initialValues: TourFormValues = {
         )}
       </Formik>
     </div>
+    <AdminToursManagement />
+    </>
   );
 }
 
