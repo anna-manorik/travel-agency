@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { useEffect, useState } from "react";
-import { fetchTours, setSelectedTour } from "../redux/slice";
-import ToursList from "./ToursList";
+import { fetchTours, setSelectedTour, updateTourLocally, deleteTourLocally } from "../redux/slice";
 import star from '../img/star.png'
 import { useNavigate } from "react-router-dom";
 import { ToursProps } from "../types/Props";
 import { FieldArray, Formik, FormikHelpers } from "formik";
 import * as Yup from 'yup';
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
@@ -46,7 +45,7 @@ const AdminToursManagement = () => {
     
     useEffect(() => {
         dispatch(fetchTours());
-    }, []);
+    }, [toursList]);
 
     const handleOpenInfo = (tour: ToursProps) => {
         dispatch(setSelectedTour(tour))
@@ -58,31 +57,44 @@ const AdminToursManagement = () => {
         setIsModalOpen(true)
     }
 
-    const handleUpdateTour = async (values: ToursProps, actions: FormikHelpers<ToursProps>) => {
-        // console.log('Tour was updated!!', values)
+    const handleDelete = (tour: ToursProps) => {
+        // setCurrentTourToEdit(tour)
+        handleDeleteTour(tour)
+    }
 
+    const handleUpdateTour = async (values: ToursProps, actions: FormikHelpers<ToursProps>) => {
         try {
-        actions.setSubmitting(true);
-        if (!values.id) {
-            throw new Error("Tour ID is missing for update operation.");
-        }
-        // Перетворюємо Date на об'єкт, який Firestore зрозуміє, якщо потрібно
-        //   const tourDataToUpdate = {
-        //       ...values,
-        //       createdAt: values.date instanceof Date ? values.date : new Date(values.date), // Переконайтеся, що це Date
-        //   };
-        
-        await updateDoc(doc(db, 'tours', values.id), values);
-        //   dispatch(updateTourLocally(tourDataToUpdate)); // Оновлюємо Redux Store
-        alert('Тур успішно оновлено!');
-        setIsModalOpen(false); // Закриваємо модальне вікно
-        actions.resetForm();
+            actions.setSubmitting(true);
+            if (!values.id) {
+                throw new Error("Tour ID is missing for update operation.");
+            }
+
+            await updateDoc(doc(db, 'tours', values.id), values);
+            dispatch(updateTourLocally(values));
+            setIsModalOpen(false);
+            actions.resetForm();
         } catch (error: any) {
-        console.error('Помилка оновлення туру:', error.message);
-        alert(`Помилка оновлення туру: ${error.message}`);
+            console.error('Помилка оновлення туру:', error.message);
+            alert(`Помилка оновлення туру: ${error.message}`);
         } finally {
-        actions.setSubmitting(false);
+            actions.setSubmitting(false);
         }
+    }
+    
+    const handleDeleteTour = async (values: ToursProps) => {
+        if (window.confirm('Ви впевнені, що хочете видалити цей тур?')) {
+            try {
+                if (!values.id) {
+                    throw new Error("Tour ID is missing for update operation.");
+                }
+
+                await deleteDoc(doc(db, 'tours', values.id));
+                dispatch(deleteTourLocally(values.id));
+            } catch (error: any) {
+                console.error('Помилка видалення туру:', error.message);
+            } 
+        }
+        
     }
 
     return (
@@ -104,7 +116,8 @@ const AdminToursManagement = () => {
                         <button onClick={() => handleOpenInfo(currentTour)} className="text-blue-600 underline text-xl mt-5 mb-5">
                             See tour details...
                         </button>
-                        <button onClick={() => handleEdit(currentTour)}>EDIT TOUR</button>
+                        <button onClick={() => handleEdit(currentTour)} style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>EDIT TOUR</button>
+                        <button onClick={() => handleDelete(currentTour)} style={{ padding: '10px 20px', backgroundColor: '#f85454', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>DELETE TOUR</button>
 
                         {/* <div className="bg-cover bg-center h-64 w-full" style={{ backgroundImage: `url(${currentTourToEdit.image})` }}></div> */}
                     </div>
@@ -242,11 +255,9 @@ const AdminToursManagement = () => {
         </ul>
         {/* <div className={isModalOpen ? 'block' : 'hidden'}>Hello!!!!<button onClick={() => setIsModalOpen(false)}>X</button></div> */}
 
-        
         </>
-
-        // <ToursList toursList={toursList} />
     )
 }
 
 export default AdminToursManagement;
+

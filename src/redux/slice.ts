@@ -23,6 +23,12 @@ const db = getFirestore(app);
     loading: false
   };
 
+//   const initialState: ToursState = {
+//     tours: [],
+//     status: 'idle',
+//     error: null,
+// };
+
   export const fetchTours = createAsyncThunk(
     'tours/fetchTours',
     async () => {
@@ -111,9 +117,27 @@ const tourInfoSlice = createSlice({
   }
 });
 
+const toursListAdminSlice = createSlice({
+    name: 'tours',
+    initialState: initialFilterState,
+    reducers: {
+        updateTourLocally: (state, action: PayloadAction<ToursProps>) => {
+            const index = state.allTours.findIndex(tour => tour.id === action.payload.id);
+            if (index !== -1) {
+                state.allTours[index] = action.payload;
+            }
+        },
+        deleteTourLocally: (state, action: PayloadAction<string>) => {
+            state.allTours = state.allTours.filter(tour => tour.id !== action.payload);
+        },
+    },
+});
+
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
 export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
 export const { setSelectedTour } = tourInfoSlice.actions;
+export const { updateTourLocally, deleteTourLocally } = toursListAdminSlice.actions;
 export const cartReducer = cartSlice.reducer;
 export const toursReducer = toursSlice.reducer;
 export const tourInfoReducer =  tourInfoSlice.reducer;
+export const tourListReducer =  toursListAdminSlice.reducer;
