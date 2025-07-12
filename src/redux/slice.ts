@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartItem, CartState } from '../types/Props'
+import { CartItem, CartState, UserProps } from '../types/Props'
 import { ToursProps, ToursState, TourInfoState } from '../types/Props'
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
@@ -29,6 +29,18 @@ const db = getFirestore(app);
 //     error: null,
 // };
 
+interface UsersState {
+  users: UserProps[];
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+const initialStateUsers: UsersState = {
+  users: [],
+  loading: 'idle',
+  error: null,
+};
+
   export const fetchTours = createAsyncThunk(
     'tours/fetchTours',
     async () => {
@@ -37,6 +49,17 @@ const db = getFirestore(app);
         id: doc.id,
         ...doc.data()
       })) as ToursProps[];
+    }
+  );
+
+  export const fetchUsers = createAsyncThunk(
+    'tours/fetchUsers',
+    async () => {
+      const snapshot = await getDocs(collection(db, "users"));
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as UserProps[];
     }
   );
 
@@ -133,6 +156,27 @@ const toursListAdminSlice = createSlice({
     },
 });
 
+const userListSlice = createSlice({
+  name: 'users',
+  initialState: initialStateUsers,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<UserProps[]>) => {
+        state.loading = 'succeeded';
+        state.users = action.payload; // Зберігаємо отриманих користувачів
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Помилка завантаження користувачів';
+      });
+  },
+})
+
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
 export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
 export const { setSelectedTour } = tourInfoSlice.actions;
@@ -141,3 +185,4 @@ export const cartReducer = cartSlice.reducer;
 export const toursReducer = toursSlice.reducer;
 export const tourInfoReducer =  tourInfoSlice.reducer;
 export const tourListReducer =  toursListAdminSlice.reducer;
+export const userListReducer = userListSlice.reducer

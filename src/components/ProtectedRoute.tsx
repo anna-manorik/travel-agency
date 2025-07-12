@@ -7,15 +7,15 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { currentUser } = useAuth();
+  const { userData } = useAuth();
 
   // 1. Стан завантаження: Показуємо щось, поки ми отримуємо дані про користувача
-  if (currentUser.loading) {
+  if (userData.loading) {
     return <div>Loading user data...</div>; // Або ваш власний компонент завантаження
   }
 
   // 2. Користувач не автентифікований: Перенаправляємо на сторінку входу
-  if (!currentUser.uid) {
+  if (!userData.uid) {
     console.log("ProtectedRoute: User not authenticated, redirecting to /home");
     return <Navigate to="/" replace />;
   }
@@ -23,8 +23,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   // 3. Користувач автентифікований, перевіряємо роль
   // Якщо allowedRoles не вказано, це означає, що доступ дозволений будь-якому автентифікованому користувачу.
   // Якщо allowedRoles вказано, ми перевіряємо, чи поточна роль користувача входить до дозволених.
-  if (allowedRoles && currentUser.role && !allowedRoles.includes(currentUser.role)) {
-    console.log(`ProtectedRoute: Access denied for role "${currentUser.role}". Redirecting to /`);
+  if (allowedRoles && userData.role && !allowedRoles.includes(userData.role)) {
+    console.log(`ProtectedRoute: Access denied for role "${userData.role}". Redirecting to /`);
     // Користувач увійшов, але не має потрібної ролі.
     // Можна перенаправити на головну сторінку, або на сторінку "Доступ заборонено".
     // Я перенаправляю на "/" для простоти.
@@ -32,7 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   }
 
   // 4. Якщо всі перевірки пройшли успішно, дозволяємо доступ до вкладених маршрутів
-  console.log(`ProtectedRoute: Access granted for role "${currentUser.role}"`);
+  console.log(`ProtectedRoute: Access granted for role "${userData.role}"`);
   return <Outlet />;
 };
 

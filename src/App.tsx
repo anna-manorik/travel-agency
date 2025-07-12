@@ -86,9 +86,11 @@ function App() {
 
   return (
     <>
-      <Header />
-      <AuthProvider><RoutesList /></AuthProvider>
-      <Footer />
+      <AuthProvider>
+        <Header />
+        <RoutesList />
+        <Footer />
+      </AuthProvider>
 
       {/* <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>

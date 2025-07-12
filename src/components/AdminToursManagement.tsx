@@ -58,7 +58,6 @@ const AdminToursManagement = () => {
     }
 
     const handleDelete = (tour: ToursProps) => {
-        // setCurrentTourToEdit(tour)
         handleDeleteTour(tour)
     }
 
@@ -119,7 +118,6 @@ const AdminToursManagement = () => {
                         <button onClick={() => handleEdit(currentTour)} style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>EDIT TOUR</button>
                         <button onClick={() => handleDelete(currentTour)} style={{ padding: '10px 20px', backgroundColor: '#f85454', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>DELETE TOUR</button>
 
-                        {/* <div className="bg-cover bg-center h-64 w-full" style={{ backgroundImage: `url(${currentTourToEdit.image})` }}></div> */}
                     </div>
 
                     {isModalOpen && currentTourToEdit &&  (
@@ -138,7 +136,6 @@ const AdminToursManagement = () => {
             >
               {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, isValid }) => (
                 <form onSubmit={handleSubmit}>
-                  {/* Поля форми редагування (аналогічні до AddTourForm) */}
                   {/* ID приховано, але передається у values */}
                   <input type="hidden" name="id" value={values.id} />
 
@@ -147,7 +144,6 @@ const AdminToursManagement = () => {
                       <input id="edit-title" name="title" type="text" onChange={handleChange} onBlur={handleBlur} value={values.title} style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}/>
                       {touched.title && errors.title ? (<div style={{ color: 'red', fontSize: '0.8em', marginTop: '5px' }}>{errors.title}</div>) : null}
                   </div>
-                  {/* ... Додайте інші поля для редагування: description, rating, price, mainPhotoUrl, category, createdAt */}
                   {/* Опис */}
                   <div style={{ marginBottom: '15px' }}>
                     <label htmlFor="edit-description" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Опис:</label>
@@ -253,7 +249,6 @@ const AdminToursManagement = () => {
                 </li>
             ))}
         </ul>
-        {/* <div className={isModalOpen ? 'block' : 'hidden'}>Hello!!!!<button onClick={() => setIsModalOpen(false)}>X</button></div> */}
 
         </>
     )

@@ -29,11 +29,8 @@ const validationSchema = Yup.object({
   });
 
 const LoginForm = () => {
-    // const [isLogged, setIsLogged] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
-    const { currentUser } = useAuth()
-
-    console.log('!!!! curUser', currentUser)
+    const { userData } = useAuth()
     
         const handleLogin = (values: AuthUser, actions: FormikHelpers<AuthUser>) => {
             checkUser(values.login, values.password)
@@ -42,7 +39,6 @@ const LoginForm = () => {
 
         const handleLogout = () => {
             localStorage.removeItem('token');
-            // setIsLogged(false)
             signOut(auth)
         };
 
@@ -53,16 +49,14 @@ const LoginForm = () => {
                 
                 const token = await user.getIdToken();
                 localStorage.setItem('token', token);
-                // setIsLogged(true)
               } catch (error: any) {
-                // setIsLogged(false)
                 console.error('Login failed:', error.message);
               }
         }
         
         return (
             <div className='flex flex-col items-center'>
-                <span className='text-lg font-bold p-5'>{!currentUser.loading && currentUser.uid !== null ? `Welcome, ${currentUser.email}! Your current role: ${currentUser.role || 'N/A'}` : 'Please, login for proseed!'}</span>
+                <span className='text-lg font-bold p-5'>{!userData.loading !== null && userData.uid !== null ? `Welcome, ${userData.email}! Your current role: ${userData.role || 'N/A'}` : 'Please, login for proseed!'}</span>
                 <Formik initialValues={{login: '', password: ''}} onSubmit={(values, actions) => {handleLogin(values, actions)}} validationSchema={validationSchema}>
                     <Form className="flex flex-col mb-10 max-w-md mx-auto p-4 bg-white rounded shadow-md">
                         <Field as="input" name="login" type="email" placeholder="Login" className="h-10 border-4 border-yellow-400" />
@@ -85,7 +79,7 @@ const LoginForm = () => {
                     </Form>
                 </Formik>
                 
-                <button disabled={!currentUser.uid} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
+                <button disabled={!userData.uid} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
             </div>
         )
 }

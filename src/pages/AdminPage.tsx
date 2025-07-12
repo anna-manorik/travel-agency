@@ -64,8 +64,6 @@ const TourSchema = Yup.object().shape({
 });
 
 const AdminPage = () => {
-    
-    
     const initialValues: TourFormValues = {
         title: '',
         description: '',

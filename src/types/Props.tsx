@@ -77,3 +77,19 @@ export type TourInfoState = {
     selectedTour: ToursProps | null;
     loading: boolean
   };
+
+  export type UserProps = {
+    id: string; // UID може бути null, якщо користувач не автентифікований
+    email: string | null; // Email може бути null
+    role: 'user' | 'admin' | null; // Роль може бути 'user', 'admin' або null, якщо не завантажена
+    loading: boolean; // Вказує, чи триває завантаження даних про користувача
+    messageList?: string[]
+  };
+
+  export type MessageProps = {
+      userId: string,
+      userEmail: string,
+      messageId: string,
+      message: string,
+      readed: boolean
+  }

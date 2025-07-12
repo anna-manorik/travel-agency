@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { cartReducer, toursReducer, tourInfoReducer } from './slice';
+import { cartReducer, toursReducer, tourInfoReducer, userListReducer, tourListReducer } from './slice';
 
 const loadCartFromStorage = () => {
   try {
@@ -26,6 +26,8 @@ export const store = configureStore({
     cart: cartReducer,
     tours: toursReducer,
     tourInfo: tourInfoReducer,
+    toursForAdmin: tourListReducer,
+    users: userListReducer
   },
   preloadedState: {
     cart: loadCartFromStorage(),

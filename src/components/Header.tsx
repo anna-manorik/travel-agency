@@ -8,13 +8,15 @@ import instagram from '../img/instagram.svg';
 import telegram from '../img/telegram.svg';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useAuth } from '../context/AuthContext.tsx';
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [isCartFull, setIsCartFull] = useState(false)
     const location = useLocation();
     const items = useSelector((state: RootState) => state.cart.items);
-
+    const { userData } = useAuth()
+    
     const toggleMenu = () => {
         setMobileMenuOpen(!isMobileMenuOpen)
     }
@@ -67,6 +69,19 @@ const Header = () => {
     </NavLink>
   </div>
 
+  {/* Message Icon - for users */}
+  <div>
+    <div className="w-[20px] h-[20px] relative rounded-full text-sm text-white bg-red-500 top-3 left-10px ">
+      <span>{userData.messageList?.filter(message => !message.readed).length || 0}</span>
+    </div>
+    <NavLink to="/messages" className="text-3xl hover:scale-110 transition-transform">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="34px" height="34px">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 10h12v2H6v-2zm0-3h12v2H6V7z"/>
+      </svg>
+    </NavLink>
+    </div>
+
   {/* Mobile Toggle Button */}
   <button
     className="md:hidden order-2 w-7 h-6 flex flex-col justify-between ml-auto mr-4"
@@ -93,6 +108,7 @@ const Header = () => {
         { to: "/contacts", label: "Contacts" },
         { to: "/signup", label: "Sign Up" },
         { to: "/admin", label: "Admin Panel" },
+        { to: "/chat", label: "Admin Chat" },
       ].map((link) => (
         <li key={link.to}>
           <NavLink

@@ -9,6 +9,8 @@ import { Routes, Route } from "react-router-dom";
 import AdminPage from "../pages/AdminPage";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFoundPage from "../pages/NotFoundPage";
+import AdminChat from "../pages/AdminChat";
+import Chat from "../pages/Chat";
 
 
 const RoutesList = () => {
@@ -20,11 +22,13 @@ const RoutesList = () => {
                     <Route path="/contacts" element={<Contacts />} />
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/cart" element={<Cart />} />
+                    <Route path="/messages" element={<Chat />} />
                     <Route path='/tour-info' element={<TourInfo />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/chat" element={<AdminChat />} />
                 </Route>
 
                 <Route path="/" element={<Home />} />
