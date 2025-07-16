@@ -6,6 +6,7 @@ import { addItem, setSelectedTour } from '../redux/slice'
 import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TourMap from './TourMap'
 
 const ToursList = ({ toursList }: ToursListProps) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -43,6 +44,7 @@ const ToursList = ({ toursList }: ToursListProps) => {
             </div>
             ))}
         </ul>
+        <TourMap toursList={toursList} />
         <ToastContainer position="top-right" autoClose={3000} />
         </>
     )

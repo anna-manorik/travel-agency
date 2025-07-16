@@ -48,7 +48,10 @@ export type ToursProps = {
     image: string,
     category: string | null,
     sliderList?: string[]
-    reviews?: Review[]
+    reviews?: Review[],
+    lat?: number,
+    lng?: number,
+    shortDesc?: string,
 }
 
 export type ToursListProps = {
