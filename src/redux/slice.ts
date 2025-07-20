@@ -15,6 +15,7 @@ const db = getFirestore(app);
   const initialFilterState: ToursState = {
     allTours: [],
     filteredTours: [],
+    searchedTours: [],
     loading: false
   };
 
@@ -22,12 +23,6 @@ const db = getFirestore(app);
     selectedTour: null,
     loading: false
   };
-
-//   const initialState: ToursState = {
-//     tours: [],
-//     status: 'idle',
-//     error: null,
-// };
 
 interface UsersState {
   users: UserProps[];
@@ -141,7 +136,7 @@ const tourInfoSlice = createSlice({
 });
 
 const toursListAdminSlice = createSlice({
-    name: 'tours',
+    name: 'toursForAdmin',
     initialState: initialFilterState,
     reducers: {
         updateTourLocally: (state, action: PayloadAction<ToursProps>) => {
@@ -168,7 +163,7 @@ const userListSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<UserProps[]>) => {
         state.loading = 'succeeded';
-        state.users = action.payload; // Зберігаємо отриманих користувачів
+        state.users = action.payload;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = 'failed';
@@ -177,12 +172,32 @@ const userListSlice = createSlice({
   },
 })
 
+const searchTourSlice = createSlice({
+    name: 'search',
+    initialState: initialFilterState,
+    reducers: {
+      searchTour: (state, action: PayloadAction<string>) => {
+        state.searchedTours = state.allTours.filter(tour => tour.title.toLowerCase().includes(action.payload.toLowerCase()));
+      },
+      clearSearchResults: (state) => {
+        state.searchedTours = [];
+      }
+    },
+    extraReducers: builder => {
+    builder.addCase(fetchTours.fulfilled, (state, action) => {
+      state.allTours = action.payload;
+    });
+  },
+})
+
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
 export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
 export const { setSelectedTour } = tourInfoSlice.actions;
 export const { updateTourLocally, deleteTourLocally } = toursListAdminSlice.actions;
+export const { searchTour, clearSearchResults } = searchTourSlice.actions;
 export const cartReducer = cartSlice.reducer;
 export const toursReducer = toursSlice.reducer;
 export const tourInfoReducer =  tourInfoSlice.reducer;
 export const tourListReducer =  toursListAdminSlice.reducer;
 export const userListReducer = userListSlice.reducer
+export const searchTourReducer = searchTourSlice.reducer

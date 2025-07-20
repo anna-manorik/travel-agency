@@ -73,6 +73,7 @@ export type CartState = {
 export type ToursState = {
     allTours: ToursProps[];
     filteredTours: ToursProps[];
+    searchedTours: ToursProps[];
     loading: boolean;
   };
 
