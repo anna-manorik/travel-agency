@@ -140,7 +140,7 @@ const Header = () => {
             {searchValue && searchedToursList.length === 0 ? <div className="block absolute border border-gray-300 bg-white p-5">Any results</div> : false}
           </div>
 
-          {/* Navigation */}
+          {/* Navigation */} 
           <nav
             className={`${
               isMobileMenuOpen ? 'block' : 'hidden'
