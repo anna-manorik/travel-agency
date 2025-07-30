@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged, getIdTokenResult, getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../context/AuthContext.tsx';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -28,20 +29,17 @@ const validationSchema = Yup.object({
   });
 
 const LoginForm = () => {
-    const [user, setUser] = useState<AuthUser | null>(null)
-    const [isLogged, setIsLogged] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const { userData } = useAuth()
     
         const handleLogin = (values: AuthUser, actions: FormikHelpers<AuthUser>) => {
-            setUser(values)
             checkUser(values.login, values.password)
             actions.resetForm();
         };
 
         const handleLogout = () => {
-            sessionStorage.removeItem('token');
-            setIsLogged(false)
-            setUser(null)
+            localStorage.removeItem('token');
+            signOut(auth)
         };
 
         const checkUser = async (login: string, password: string) => {
@@ -50,17 +48,15 @@ const LoginForm = () => {
                 const user = userCredential.user;
                 
                 const token = await user.getIdToken();
-                sessionStorage.setItem('token', token);
-                setIsLogged(true)
-                console.log('Logged in successfully:', user);
+                localStorage.setItem('token', token);
               } catch (error: any) {
-                setIsLogged(false)
                 console.error('Login failed:', error.message);
               }
         }
         
         return (
             <div className='flex flex-col items-center'>
+                <span className='text-lg font-bold p-5'>{!userData.loading !== null && userData.uid !== null ? `Welcome, ${userData.email}! Your current role: ${userData.role || 'N/A'}` : 'Please, login for proseed!'}</span>
                 <Formik initialValues={{login: '', password: ''}} onSubmit={(values, actions) => {handleLogin(values, actions)}} validationSchema={validationSchema}>
                     <Form className="flex flex-col mb-10 max-w-md mx-auto p-4 bg-white rounded shadow-md">
                         <Field as="input" name="login" type="email" placeholder="Login" className="h-10 border-4 border-yellow-400" />
@@ -82,8 +78,8 @@ const LoginForm = () => {
                         <button type="submit" onClick={() => handleLogin} className="h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold">LOG IN</button>
                     </Form>
                 </Formik>
-                <span className='text-lg font-bold p-5'>{isLogged ? `Welcome, ${user?.login}!` : 'Please, login for proseed!'}</span>
-                <button disabled={!isLogged} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
+                
+                <button disabled={!userData.uid} type="submit" onClick={handleLogout} className="w-40 h-10 border-4 border-yellow-400 rounded-xl bg-yellow-300 font-bold disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-600">LOG OUT</button><br />
             </div>
         )
 }

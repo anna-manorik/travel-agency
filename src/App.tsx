@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import TaskList from './components/TaskList'
 import AddingForm from './components/AddingForm'
@@ -9,7 +9,7 @@ import Header from './components/Header';
 import Footer from './components/Footer'
 import RoutesList from './components/RoutesList'
 import { nanoid } from 'nanoid';
-
+import { AuthProvider } from './context/AuthContext.tsx';
 
 function App() {
   const [taskList, setTaskList] = useState<TaskProps[]>([])
@@ -86,9 +86,11 @@ function App() {
 
   return (
     <>
-      <Header />
-      <RoutesList />
-      <Footer />
+      <AuthProvider>
+        <Header />
+        <RoutesList />
+        <Footer />
+      </AuthProvider>
 
       {/* <AddingForm addTask={addTask}></AddingForm>
       <FilterForm filterTasksFunk={filterTasks}></FilterForm>

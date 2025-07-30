@@ -6,6 +6,7 @@ import { addItem, setSelectedTour } from '../redux/slice'
 import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TourMap from './TourMap'
 
 const ToursList = ({ toursList }: ToursListProps) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -16,7 +17,7 @@ const ToursList = ({ toursList }: ToursListProps) => {
         toast.success('Tour was added to cart!');
     }
 
-    const handleClick = (tour: ToursProps) => {
+    const handleOpenInfo = (tour: ToursProps) => {
         dispatch(setSelectedTour(tour))
         navigate('/tour-info')
     }
@@ -36,13 +37,14 @@ const ToursList = ({ toursList }: ToursListProps) => {
                     <img key={i} src={star} alt="star" className="w-5 h-5" />
                     ))}
                 </div>
-                <button onClick={() => handleClick(item)} className="text-blue-600 underline text-xl mt-5 mb-5">
+                <button onClick={() => handleOpenInfo(item)} className="text-blue-600 underline text-xl mt-5 mb-5">
                     See tour details...
                 </button>
                 <div className="bg-cover bg-center h-64 w-full" style={{ backgroundImage: `url(${item.image})` }}></div>
             </div>
             ))}
         </ul>
+        <TourMap toursList={toursList} />
         <ToastContainer position="top-right" autoClose={3000} />
         </>
     )

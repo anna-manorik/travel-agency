@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartItem, CartState } from '../types/Props'
+import { CartItem, CartState, UserProps } from '../types/Props'
 import { ToursProps, ToursState, TourInfoState } from '../types/Props'
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
@@ -15,6 +15,7 @@ const db = getFirestore(app);
   const initialFilterState: ToursState = {
     allTours: [],
     filteredTours: [],
+    searchedTours: [],
     loading: false
   };
 
@@ -22,6 +23,18 @@ const db = getFirestore(app);
     selectedTour: null,
     loading: false
   };
+
+interface UsersState {
+  users: UserProps[];
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+const initialStateUsers: UsersState = {
+  users: [],
+  loading: 'idle',
+  error: null,
+};
 
   export const fetchTours = createAsyncThunk(
     'tours/fetchTours',
@@ -31,6 +44,17 @@ const db = getFirestore(app);
         id: doc.id,
         ...doc.data()
       })) as ToursProps[];
+    }
+  );
+
+  export const fetchUsers = createAsyncThunk(
+    'tours/fetchUsers',
+    async () => {
+      const snapshot = await getDocs(collection(db, "users"));
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as UserProps[];
     }
   );
 
@@ -111,9 +135,69 @@ const tourInfoSlice = createSlice({
   }
 });
 
+const toursListAdminSlice = createSlice({
+    name: 'toursForAdmin',
+    initialState: initialFilterState,
+    reducers: {
+        updateTourLocally: (state, action: PayloadAction<ToursProps>) => {
+            const index = state.allTours.findIndex(tour => tour.id === action.payload.id);
+            if (index !== -1) {
+                state.allTours[index] = action.payload;
+            }
+        },
+        deleteTourLocally: (state, action: PayloadAction<string>) => {
+            state.allTours = state.allTours.filter(tour => tour.id !== action.payload);
+        },
+    },
+});
+
+const userListSlice = createSlice({
+  name: 'users',
+  initialState: initialStateUsers,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<UserProps[]>) => {
+        state.loading = 'succeeded';
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Помилка завантаження користувачів';
+      });
+  },
+})
+
+const searchTourSlice = createSlice({
+    name: 'search',
+    initialState: initialFilterState,
+    reducers: {
+      searchTour: (state, action: PayloadAction<string>) => {
+        state.searchedTours = state.allTours.filter(tour => tour.title.toLowerCase().includes(action.payload.toLowerCase()));
+      },
+      clearSearchResults: (state) => {
+        state.searchedTours = [];
+      }
+    },
+    extraReducers: builder => {
+    builder.addCase(fetchTours.fulfilled, (state, action) => {
+      state.allTours = action.payload;
+    });
+  },
+})
+
 export const { addItem, decreaseItem, removeItem, clearCart } = cartSlice.actions;
 export const { filterByCategory, filterByPrice, filterByDate, filterByRate } = toursSlice.actions;
 export const { setSelectedTour } = tourInfoSlice.actions;
+export const { updateTourLocally, deleteTourLocally } = toursListAdminSlice.actions;
+export const { searchTour, clearSearchResults } = searchTourSlice.actions;
 export const cartReducer = cartSlice.reducer;
 export const toursReducer = toursSlice.reducer;
 export const tourInfoReducer =  tourInfoSlice.reducer;
+export const tourListReducer =  toursListAdminSlice.reducer;
+export const userListReducer = userListSlice.reducer
+export const searchTourReducer = searchTourSlice.reducer
