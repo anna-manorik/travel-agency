@@ -2,6 +2,7 @@ import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { db, useAuth } from '../context/AuthContext.tsx';
 import { MessageProps } from '../types/Props.tsx';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Chat = () => {
     const { userData } = useAuth()
@@ -35,7 +36,7 @@ const Chat = () => {
 
     } catch (error) {
       console.error("Помилка оновлення статусу повідомлення:", error);
-      alert("Не вдалося оновити статус повідомлення.");
+      toast.error("Не вдалося оновити статус повідомлення.");
     }
   };
 
