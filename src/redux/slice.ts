@@ -4,6 +4,7 @@ import { ToursProps, ToursState, TourInfoState } from '../types/Props'
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
+import { UsersState } from '../types/Interfaces.tsx';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -23,12 +24,6 @@ const db = getFirestore(app);
     selectedTour: null,
     loading: false
   };
-
-interface UsersState {
-  users: UserProps[];
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
-  error: string | null;
-}
 
 const initialStateUsers: UsersState = {
   users: [],

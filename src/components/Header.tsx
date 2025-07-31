@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { useAuth } from '../context/AuthContext.tsx';
 import { clearSearchResults, fetchTours, searchTour, setSelectedTour } from "../redux/slice.ts";
 import { ToursProps } from "../types/Props.tsx";
+import { debounce } from 'lodash';
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -64,15 +65,15 @@ const Header = () => {
       setIsSearchResult(searchedToursList.length === 0 ? false : true)
     }, [searchedToursList])
 
-    const handleSearchTour = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(event.target.value)
-      dispatch(searchTour(event.target.value))
+    const handleSearchTour = debounce((searchValue: string) => {
+      setSearchValue(searchValue)
+      dispatch(searchTour(searchValue))
 
-      if(event.target.value === '') {
+      if(searchValue === '') {
         setIsSearchResult(false)
         dispatch(clearSearchResults());
       }
-    }
+    }, 200)
 
     const handleOpenInfo = (tour: ToursProps) => {
       dispatch(setSelectedTour(tour))
@@ -132,7 +133,7 @@ const Header = () => {
               value={searchValue}
               type="text"
               placeholder="Пошук туру"
-              onChange={(e) => handleSearchTour(e)}
+              onChange={(e) => handleSearchTour(e.target.value)}
               className="w-full md:w-64 px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-yellow-400 text-lg"
             />
             <ul className={isSearchResult ? 'block absolute border border-gray-300 bg-white p-5' : 'hidden'}>{searchedToursList.map(tour => (<li className="text-lg cursor-pointer border-b-4" onClick={() => handleOpenInfo(tour)}>{tour.title} - <span className="text-orange-800">{tour.price} EUR</span></li>))}
@@ -154,6 +155,24 @@ const Header = () => {
                 { to: "/about", label: "About Us" },
                 { to: "/contacts", label: "Contacts" },
                 { to: "/signup", label: "Sign Up" },
+              ].map((link) => (
+                <li key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `px-4 py-2 block rounded-xl transition duration-300 ${
+                        isActive
+                          ? "text-yellow-500 font-bold"
+                          : "text-gray-700 hover:text-yellow-600"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+              {userData.role === 'admin' && 
+              [
                 { to: "/admin", label: "Admin Panel" },
                 { to: "/chat", label: "Admin Chat" },
               ].map((link) => (

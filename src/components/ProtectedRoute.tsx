@@ -1,10 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.tsx';
-
-interface ProtectedRouteProps {
-  allowedRoles?: ('admin' | 'user')[]; // Опціональний масив дозволених ролей
-}
+import { ProtectedRouteProps } from '../types/Interfaces.tsx';
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { userData } = useAuth();
