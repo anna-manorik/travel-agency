@@ -8,22 +8,13 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
 import ToursList from '../components/ToursList.tsx';
 import AdminToursManagement from '../components/AdminToursManagement.tsx';
+import { toast } from 'react-toastify';
+import { TourFormValues } from '../types/Interfaces.tsx';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 export {app, auth, db}
-
-interface TourFormValues {
-    title: string,
-    description: string,
-    date: Timestamp,
-    price: number,
-    rating: number,
-    image: string,
-    category: string,
-    sliderList?: string[]
-}
 
 const tourCategories = [
   'Sea',
@@ -83,12 +74,12 @@ const AdminPage = () => {
       const docRef = await addDoc(collection(db, 'tours'), values);
 
       console.log('Тур успішно додано з ID:', docRef.id);
-      alert(`Тур "${values.title}" успішно додано! ID: ${docRef.id}`);
+      toast.success(`Тур "${values.title}" успішно додано! ID: ${docRef.id}`);
 
       actions.resetForm(); // Очищаємо форму після успішної відправки
     } catch (error: any) {
       console.error('Помилка при додаванні туру:', error.message);
-      alert(`Помилка при додаванні туру: ${error.message}`);
+      toast.error(`Помилка при додаванні туру: ${error.message}`);
     } finally {
       actions.setSubmitting(false); // Завершуємо стан "відправляється"
     }
@@ -243,7 +234,7 @@ const AdminPage = () => {
                         type="button"
                         onClick={() => remove(index)}
                         disabled={values.sliderList?.length === 1} // Не дозволяємо видалити останнє поле
-                        style={{ padding: '8px 12px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        className='px-3 py-2 bg-red-600 text-white border-none rounded cursor-pointer'
                         >
                         X
                         </button>
@@ -252,7 +243,7 @@ const AdminPage = () => {
                     <button
                     type="button"
                     onClick={() => push('')} // Додати нове порожнє поле
-                    style={{ padding: '8px 12px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    className='px-3 py-2 bg-red-600 text-white border-none rounded cursor-pointer'  
                     >
                     Додати ще фото
                     </button>

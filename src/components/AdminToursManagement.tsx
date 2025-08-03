@@ -11,6 +11,7 @@ import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
+import { toast } from "react-toastify";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -74,7 +75,7 @@ const AdminToursManagement = () => {
             actions.resetForm();
         } catch (error: any) {
             console.error('Помилка оновлення туру:', error.message);
-            alert(`Помилка оновлення туру: ${error.message}`);
+            toast.error(`Помилка оновлення туру: ${error.message}`);
         } finally {
             actions.setSubmitting(false);
         }

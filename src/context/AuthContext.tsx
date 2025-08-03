@@ -6,25 +6,12 @@ import { getAuth, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../config/firebase.ts';
 import { MessageProps } from "../types/Props.tsx";
+import { AuthContextType, UserData } from "../types/Interfaces.tsx";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 export {app, auth, db}
-
-interface UserData {
-  uid: string | null;
-  email: string | null;
-  role: 'user' | 'admin' | null;
-  loading: boolean;
-  messageList: MessageProps[] | null;
-}
-
-interface AuthContextType {
-  userData: UserData;
-  // currentUser від Firebase Auth можна також додати, якщо потрібно
-  // currentUser: FirebaseUser | null;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
